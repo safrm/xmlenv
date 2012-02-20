@@ -1,0 +1,2 @@
+./xmlenv.sh dump
+saxon-xslt ./pkgversions.xml compare2.xsl > result.html
