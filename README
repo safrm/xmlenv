@@ -5,15 +5,15 @@ web: https://github.com/safrm/xmlenv
 description: multiplatformal/distribution system dumping and comparation
 
 content: 
- xmlenv.sh ............... main linux dump/show bash script
+ xmlenv  ................. main linux dump/show bash script
  compare-pkgs.xsl ........ template for XSLT comparation 
  
  install.sh .............. executes installation to /urs/local/bin directory
 
 usage:
-./xmlenv.sh help ......... shows help
-./xmlenv.sh show ......... show the records
-./xmlenv.sh dump ......... create pkgversions.xml
+./xmlenv help ......... shows help
+./xmlenv show ......... show the records
+./xmlenv dump ......... create pkgversions.xml
 
 #compare ./base.xml with dumped ./pkgversions.xml and generate result.html
 saxon-xslt ./pkgversions.xml compare-pkgs.xsl > result.html
