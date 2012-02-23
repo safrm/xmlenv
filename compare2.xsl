@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+ - Date:      2012/02/23
+ - Author:    "Miroslav Safr" <miroslav.safr@gmail.com>
+ - Desc:      package versions comparation for xmlenv files 
+-->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:exslt="http://exslt.org/common" version="1.0">
 
