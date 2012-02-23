@@ -1,0 +1,13 @@
+Source: xmlenv
+Section: libs
+Priority: optional
+Maintainer: Miroslav Safr <miroslav.safr@gmail.com>
+Build-Depends: debhelper (>= 5)
+Standards-Version: 1.0.0
+
+Package: xmlenv
+Architecture: all
+Depends: debhelper (>= 5), xsltproc, ${misc:Depends}, ${launcher:Depends}, ${shlibs:Depends}
+Description: Multiplatformal/distribution system dumping and comparation using XML
+
+
