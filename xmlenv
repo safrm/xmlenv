@@ -6,14 +6,14 @@
 
 #TODO
 #yum -remove .i386 from package name
-#aptitude - remoev ubuntu packaging tag from version
+#aptitude - remove ubuntu packaging tag from version 
 
-VERSION=0.0.1
+VERSION=1.0.0
 XML_VERSIONS_FILE=./pkgversions.xml
 XML_DESCRIPTIONS_FILE=./pkgdescriptions.xml
 XML_HEADER_START="<?xml version=\"1.0\" encoding=\"utf-8\"?>"
 XML_HEADER="<system "
-PREFFERED_MANAGER="" #aptitude
+PREFFERED_MANAGER=""           #dpkg
 MANAGERS="managers: "          #status
 RIGHT_NOW=$(date +"%x %r %Z")
 
@@ -34,7 +34,7 @@ fi
 if [ -r `which lsb_release 2>/dev/null` ]; then
 #if $(type -P lsb_release > /dev/null); then \
 	SYSTEMNAME=`lsb_release -d | sed 's/^Description:[[:space:]]//g'`
-        log "systemname=$SYSTEMNAME";
+    log "systemname=$SYSTEMNAME";
 fi
 if [ "x$SYSTEMNAME" = "x" ]
 then
@@ -43,18 +43,19 @@ else
 XML_HEADER="$XML_HEADER systemname=\"$SYSTEMNAME\" "
 fi
 
-#header - os info --------------------------------------------------------
+#header - os info + arch separately --------------------------------------
 if [ -r `which uname 2>/dev/null` ]; then
 	OSINFO=`uname -a `
-        log "info=$OSINFO";
+	OSARCH=`uname -m`
+    log "arch=$OSARCH";
+    log "info=$OSINFO";
 fi
 if [ "x$OSINFO" = "x" ]
 then
     echo "No system name and type detected (uname)"
 else
-XML_HEADER="$XML_HEADER info=\"$OSINFO\" "
+	XML_HEADER="$XML_HEADER info=\"$OSARCH\" info=\"$OSINFO\" "
 fi
-
 
 #header - computername ----------------------------------------------------
 if [ -r `which hostname 2>/dev/null` ]; then
@@ -112,6 +113,7 @@ MANAGERS=$MANAGERS"preffered=$PREFFERED_MANAGER"
 if [ $cmd_show = 1 -a $group_sysinfo = 1 ]; then
         echo "type=$OSTYPE"
         echo "systemname=$SYSTEMNAME"
+        echo "arch=$OSARCH"
         echo "info=$OSINFO"
         echo "hostname=$HOSTNAME"
         echo "username=$USERNAME"
