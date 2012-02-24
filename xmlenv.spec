@@ -40,8 +40,8 @@ export INSTALL_ROOT=$RPM_BUILD_ROOT
 #make install
 mkdir -p %{buildroot}%{_bindir}
 mkdir -p %{buildroot}%{_datadir}/xmlenv
-cp ./xmlenv %{buildroot}/usr/bin/
-cp ./compare-pkgs.xsl %{buildroot}%{_datadir}/xmlenv/
+install -m 755 ./xmlenv %{buildroot}/usr/bin/
+install -m 755 ./compare-pkgs.xsl %{buildroot}%{_datadir}/xmlenv/
 
 # >> install post
 # << install post
