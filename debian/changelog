@@ -1,3 +1,12 @@
+xmlenv (1.0.1-1) unstable; urgency=low
+  * rpm building
+  * Chg: currently we don't need binaries so noarch for rpm
+  * Chg: rpm dir to git ignore
+  * New:arch separately added to sysinfo for comparations Fix:version no, default deb manager
+  * Fix: Problem with permissions
+
+ -- Mirolslav Safr <miroslav.safr@gmail.com>  Sat, 25 Feb 2012 17:17:32 +0200
+
 xmlenv (1.0.0-1) unstable; urgency=low
 
   * first released version
