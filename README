@@ -1,19 +1,33 @@
 name: xmlenv
-version: 1.0.0
-author:  Miroslav Safr <miroslav.safr@gmail.com>
+author:  Miroslav Safr <miroslav.safr@gmail.com> 
+thanks to: Matusz for help with version XSLT transformation - Dezso Denes <denes.dezco@gmail.com>
 web: https://github.com/safrm/xmlenv
 description: multiplatformal/distribution system dumping and comparation
 
 content: 
  xmlenv  ................. main linux dump/show bash script
  compare-pkgs.xsl ........ template for XSLT comparation 
- 
- install.sh .............. executes installation to /urs/local/bin directory
+
+ example/base.xml ............ base system dump
+ example/report-short.html ... short comparation report (to "current" system dump - ./pkgversions.xml)
+ example/report-full.html .... full comparation report (to "current" system dump - ./pkgversions.xml)
+
+ install.sh .............. executes installation to /urs/bin /usr/share/xmlenv/ directories
 
 usage:
 ./xmlenv help ......... shows help
 ./xmlenv show ......... show the records
 ./xmlenv dump ......... create pkgversions.xml
+./xmlenv compare ......... creates pkgversions.xml dump and compares it with base.xml
 
-#compare ./base.xml with dumped ./pkgversions.xml and generate result.html
-saxon-xslt ./pkgversions.xml compare-pkgs.xsl > result.html
+
+example1: generate default (short) comparation report:
+xmlenv compare -b example/base.xml -o example/result-short.html 
+
+example2: generate full comparation report:
+xmlenv compare -v -b example/base.xml -o example/result-full.html --full
+-v .............. script verbose output
+-b <xml-file> ... dumped base xml file which we compare to
+-o <html-file> .. save report to somewhere else
+--full .......... show in report 1.equal and 2.current unique(additional) packages
+

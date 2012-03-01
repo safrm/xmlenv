@@ -1,8 +1,8 @@
 #/bin/sh
 #multiplatformal/distribution system dumping and comparation - https://github.com/safrm/xmlenv
 #author:  Miroslav Safr <miroslav.safr@gmail.com>
-BINDIR=/usr/local/bin
-DATADIR=/usr/local/share
+BINDIR=/usr/bin
+DATADIR=/usr/share
 
 sudo mkdir -p -m 0755 $BINDIR
 sudo mkdir -p -m 0755 $DATADIR/xmlenv/

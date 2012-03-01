@@ -8,7 +8,7 @@
 #yum -remove .i386 from package name
 #aptitude - remove ubuntu packaging tag from version 
 
-VERSION=1.0.0
+VERSION=1.0.2
 XML_VERSIONS_FILE=./pkgversions.xml
 XML_DESCRIPTIONS_FILE=./pkgdescriptions.xml
 XML_HEADER_START="<?xml version=\"1.0\" encoding=\"utf-8\"?>"
@@ -242,6 +242,7 @@ log() {
 usage() {
     echo "xmlshow ${VERSION}"
     echo " commands: "
+    echo " help - prints this help"
     echo " show - shows requested info"
     echo " dump - dumps requsted info"
     echo " compare <local or http base.xml> - compares requested info"
@@ -254,18 +255,25 @@ usage() {
     echo "       *       sys   system info (s,d)"
     echo "               pkgdescr  packages with description (d)"
     echo "       *       pkgcount  number of installed packages (s)"
-    echo "               pkgver gcc>=3.0  manual comparation for one version (c)"
-    echo "               env:HOME=/home/user  environment variables equal query  (c)"
-    echo "               env:HOME*/home/user  environment variables contains query (c)"
-    echo "               sys:system=linux    system specifications equal query (c)"
-    echo "               sys:release>=\"fedora 9\"  system specifications equal or higher query (c)"
+    echo "               -f --full  generates report with equal and current unique (additional) packages (c)"
+    echo "               -o --output <html-file> write output to different file (c)"
+    echo "               -b --base <xml-file> select base comparation file (c)"
+    echo "               -v --verbose  get more output (s,d,c)"
+#    echo "               pkgver gcc>=3.0  manual comparation for one version (c)"
+#    echo "               env:HOME=/home/user  environment variables equal query  (c)"
+#    echo "               env:HOME*/home/user  environment variables contains query (c)"
+#    echo "               sys:system=linux    system specifications equal query (c)"
+#    echo "               sys:release>=\"fedora 9\"  system specifications equal or higher query (c)"
 
 }
 
 interactive=
-filename=~/system_page.html
+base_xml=`pwd`/base.xml
+output_html=`pwd`/result.html
+full_html_report=false
 cmd_show=0
 cmd_dump=0
+cmd_compare=0
 group_pkglist=0
 group_pkgver=0
 group_sysinfo=0
@@ -276,37 +284,34 @@ _V=0  				#verbose
 
 while [ "$1" != "" ]; do
     case $1 in
-        show )                  cmd_show=1
-                                ;;
-        dump )                  cmd_dump=1
-                                ;;
+        show )                  cmd_show=1 ;;
+        dump )                  cmd_dump=1 ;;
+        compare )               cmd_compare=1 ;;
         all )                   group_pkglist=1
-				group_pkgver=1
-			        group_sysinfo=1
-				group_envvar=1
+                				group_pkgver=1
+		                        group_sysinfo=1
+                				group_envvar=1 ;;
+        list | pkglist )        group_pkglist=1 ;;
+        versions | pkgver )     group_pkgver=1 ;;
+        sysinfo | sys )         group_sysinfo=1 ;;
+        descr | pkgdescr | descriptions )  group_descr=1 ;;   #scpecial usage
+        env   | envvar )        group_envvar=1 ;;
+        count | pkgcount )      group_pkgcount=1 ;;
+        -b    | --base )        shift  
+                                base_xml=`readlink -f $1`
+                                if [ ! -f $base_xml ]
+                                then
+                                    echo "Base file $base_xml does not exists" 
+                                    exit 1
+                                fi
                                 ;;
-        list | pkglist )        group_pkglist=1
+        -o    | --output )      shift  
+                                output_html=$1
                                 ;;
-        versions | pkgver )     group_pkgver=1
+        -f    | --full )        full_html_report=true
                                 ;;
-        sysinfo | sys )         group_sysinfo=1
-                                ;;
-        descr | pkgdescr | descriptions )  group_descr=1 #scpecial
-                                ;;
-        env | envvar )          group_envvar=1
-                                ;;
-        count | pkgcount )      group_pkgcount=1
-				;;
-#        -f | --file )           shift
-#                                filename=$1
-#                                ;;
-#        -i | --interactive )    interactive=1
-#                                ;;
-        help | -h | --help )     usage
-                                exit
-                                ;;
-        -v | --verbose )       _V=1
-                                ;;
+        help  | -h | --help )   usage exit ;;
+        -v    | --verbose )     _V=1 ;;
         * )                     usage
                                 exit 1
     esac
@@ -318,18 +323,26 @@ if [ "$group_pkglist" = "0" -a "$group_pkgver" = "0" -a "$group_sysinfo" = "0" -
 	group_pkglist=1
 	group_pkgver=1
 	group_sysinfo=1
-        group_envvar=1
+    group_envvar=1
 	group_pkgcount=1
 fi
-log "show=$cmd_show dump=$cmd_dump"
+log "show=$cmd_show dump=$cmd_dump compare=$cmd_compare"
 if [ $cmd_show = 1 -o  $cmd_dump = 1 ]; then
-	log "running";
+	log "running show or dump";
 	Init
 	if [ $group_pkglist = 1 -o $group_pkgver = 1 -o $group_envvar = 1 -o $group_pkgcount = 1 -o $group_descr = 1 ]; then
 		PackagesRequests
 	fi
+elif [ $cmd_compare = 1  ]; then 
+    #simple compare(base.xml) or dump+compare?
+    log "running compare";
+    cmd_dump=1 ; group_pkgver=1 ; group_sysinfo=1 ;
+    Init
+    PackagesRequests
+    saxon-xslt ./pkgversions.xml /usr/share/xmlenv/compare-pkgs.xsl  basefile=$base_xml fullreport=$full_html_report > $output_html
+    [ "$?" = "0" ] && echo "comparation result written to `readlink -f $output_html`"
 else
-	echo "wrong parameters";
-	usage
+   	echo "wrong parameters";
+    usage
 fi
 

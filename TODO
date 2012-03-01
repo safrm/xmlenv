@@ -1,0 +1,12 @@
+Todo:
+Fix: dump: tr: warning: an unescaped backslash at end of string is not portable
+New: Windows part
+New: current xml filename in report
+New: colors for some sysinfo comparation
+New: comment for dump as cmdline parameter
+
+Done:
+New: Sysinfo in html
+New: counts in report
+New: base file parameter
+New: better version strings comparation (maybe sigle x.y.z version)
