@@ -54,7 +54,7 @@ if [ "x$OSINFO" = "x" ]
 then
     echo "No system name and type detected (uname)"
 else
-	XML_HEADER="$XML_HEADER info=\"$OSARCH\" info=\"$OSINFO\" "
+	XML_HEADER="$XML_HEADER arch=\"$OSARCH\" info=\"$OSINFO\" "
 fi
 
 #header - computername ----------------------------------------------------
