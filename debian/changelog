@@ -1,15 +1,25 @@
+xmlenv (1.0.2-1) unstable; urgency=low
+  * Fix: arch atribute name
+  * New: compare: sysinfo in html 
+  * New: compare: counts in report 
+  * New: compare: base xml file parameter -b 
+  * New: compare: full report --full 
+  * New: compare: output html file -o <html-file> 
+  * New: better version strings comparation supports [epoch:]upstream_version[-debian_revision] 
+  * Chg: default install to -prefix=/bin 
+  * New: full/short report example
+  * Fix: arch atribute name
+ -- Miroslav Safr <miroslav.safr@gmail.com>  Thu, 01 Mar 2012 14:47:49 +0200
+
 xmlenv (1.0.1-1) unstable; urgency=low
   * rpm building
   * Chg: currently we don't need binaries so noarch for rpm
   * Chg: rpm dir to git ignore
   * New:arch separately added to sysinfo for comparations Fix:version no, default deb manager
   * Fix: Problem with permissions
-
  -- Mirolslav Safr <miroslav.safr@gmail.com>  Sat, 25 Feb 2012 17:17:32 +0200
 
 xmlenv (1.0.0-1) unstable; urgency=low
-
   * first released version
-
  -- Miroslav Safr <miroslav.sar@gmail.com>  Thu, 23 Feb 2012 11:08:25 +0200
       
