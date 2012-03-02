@@ -177,13 +177,13 @@
           </xsl:if>
         </xsl:when>
         <xsl:otherwise>
-           <xsl:variable name="version1epoch">
+           <xsl:variable name="version1-upstreamwithepoch">
                 <xsl:choose>
                     <xsl:when test="contains(normalize-space($version1), ':')"> <xsl:text>1</xsl:text> </xsl:when>
                     <xsl:otherwise> <xsl:text>0</xsl:text> </xsl:otherwise>
                 </xsl:choose>
             </xsl:variable>
-            <xsl:variable name="version2epoch">
+            <xsl:variable name="version2-upstreamwithepoch">
                 <xsl:choose>
                     <xsl:when test="contains(normalize-space($version2), ':')"> <xsl:text>1</xsl:text> </xsl:when>
                     <xsl:otherwise> <xsl:text>0</xsl:text> </xsl:otherwise>
@@ -370,10 +370,10 @@
                     <xsl:when test="contains($version1release, '---') or contains($version2release, '---')">
                         <xsl:text>---</xsl:text>
                     </xsl:when>
-                    <xsl:when test="$version1epoch = '1' and $version2epoch = '0'">
+                    <xsl:when test="$version1-upstreamwithepoch = '1' and $version2-upstreamwithepoch = '0'">
                         <xsl:text>&gt;</xsl:text>
                     </xsl:when>
-                    <xsl:when test="$version1epoch = '0' and $version2epoch = '1'">
+                    <xsl:when test="$version1-upstreamwithepoch = '0' and $version2-upstreamwithepoch = '1'">
                         <xsl:text>&lt;</xsl:text>
                     </xsl:when>
                     <xsl:otherwise>

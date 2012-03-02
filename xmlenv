@@ -245,7 +245,7 @@ usage() {
     echo " help - prints this help"
     echo " show - shows requested info"
     echo " dump - dumps requsted info"
-    echo " compare <local or http base.xml> - compares requested info"
+    echo " compare <local or http base.xml> - compares requested info "
     echo "    groups: all or empty = default"
     echo "    default"
     echo "               pkglist  installed  package list (s,d)"
@@ -259,6 +259,7 @@ usage() {
     echo "               -o --output <html-file> write output to different file (c)"
     echo "               -b --base <xml-file> select base comparation file (c)"
     echo "               -v --verbose  get more output (s,d,c)"
+    echo "               -ec --exitcode  comparation returns 1 if there are some packages missing (c)"
 #    echo "               pkgver gcc>=3.0  manual comparation for one version (c)"
 #    echo "               env:HOME=/home/user  environment variables equal query  (c)"
 #    echo "               env:HOME*/home/user  environment variables contains query (c)"
@@ -271,6 +272,7 @@ interactive=
 base_xml=`pwd`/base.xml
 output_html=`pwd`/result.html
 full_html_report=false
+exit_codes=false
 cmd_show=0
 cmd_dump=0
 cmd_compare=0
@@ -306,10 +308,9 @@ while [ "$1" != "" ]; do
                                 fi
                                 ;;
         -o    | --output )      shift  
-                                output_html=$1
-                                ;;
-        -f    | --full )        full_html_report=true
-                                ;;
+                                output_html=$1;;
+        -f    | --full )        full_html_report=true;;
+        -ec   | --exitcode )    exit_codes=true;;
         help  | -h | --help )   usage exit ;;
         -v    | --verbose )     _V=1 ;;
         * )                     usage
@@ -323,7 +324,7 @@ if [ "$group_pkglist" = "0" -a "$group_pkgver" = "0" -a "$group_sysinfo" = "0" -
 	group_pkglist=1
 	group_pkgver=1
 	group_sysinfo=1
-    group_envvar=1
+        group_envvar=1
 	group_pkgcount=1
 fi
 log "show=$cmd_show dump=$cmd_dump compare=$cmd_compare"
@@ -340,9 +341,21 @@ elif [ $cmd_compare = 1  ]; then
     Init
     PackagesRequests
     saxon-xslt ./pkgversions.xml /usr/share/xmlenv/compare-pkgs.xsl  basefile=$base_xml fullreport=$full_html_report > $output_html
-    [ "$?" = "0" ] && echo "comparation result written to `readlink -f $output_html`"
+    if [ "$?" != "0" ]; then
+	echo "problem in comparation - maybe libsaxon-java is not installed or you don't have permissions."
+        exit 1
+    else 
+	#0 = found not installed package
+	grep "not installed" -q $output_html  
+	if [ "$?" = "0" -a "$exit_codes" = "true" ]; then
+		echo "some packages are not installed check `readlink -f $output_html`"	
+	    	exit 1
+        else
+		echo "comparation result written to `readlink -f $output_html`"
+        fi
+    fi
 else
    	echo "wrong parameters";
-    usage
+        usage
 fi
 

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<system type="Linux" systemname="Ubuntu 11.10" arch="i686" info="Linux mirek-1005P 3.0.0-16-generic #28-Ubuntu SMP Fri Jan 27 17:50:54 UTC 2012 i686 i686 i386 GNU/Linux" hostname="my-computername" username="my-username" pkgmanager="dpkg" xmlenv="1.0.1">
+<envvars>
+  <envvar name="_" value="./xmlenv" />
+</envvars>
+<packages>
+	<package name="gcc" version="3:4.6.1-2ubuntu5" />
+</packages>
+</system>
