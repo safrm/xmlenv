@@ -16,6 +16,7 @@ XML_HEADER="<system "
 PREFFERED_MANAGER=""           #dpkg
 MANAGERS="managers: "          #status
 RIGHT_NOW=$(date +"%x %r %Z")
+COMMENT_FIELD=""
 
 Init() {
 #header - os type --------------------------------------------------------
@@ -118,13 +119,13 @@ if [ $cmd_show = 1 -a $group_sysinfo = 1 ]; then
         echo "hostname=$HOSTNAME"
         echo "username=$USERNAME"
 	echo $MANAGERS
+        echo "commnet=$COMMENT_FIELD"
 fi
 }
 
 
-
 PackagesRequests() {
-XML_HEADER="$XML_HEADER pkgmanager=\"$PREFFERED_MANAGER\" xmlenv=\"$VERSION\">"
+XML_HEADER="$XML_HEADER pkgmanager=\"$PREFFERED_MANAGER\" xmlenv=\"$VERSION\" comment=\"$COMMENT_FIELD\">"
 if [ "$cmd_dump" = "1" ]; then
 	echo $XML_HEADER_START > $XML_VERSIONS_FILE
 	echo $XML_HEADER >> $XML_VERSIONS_FILE
@@ -260,6 +261,7 @@ usage() {
     echo "               -b --base <xml-file> select base comparation file (c)"
     echo "               -v --verbose  get more output (s,d,c)"
     echo "               -ec --exitcode  comparation returns 1 if there are some packages missing (c)"
+    echo "               -c --comment \"example comment\" stores comment to dump (s,d,c)"
 #    echo "               pkgver gcc>=3.0  manual comparation for one version (c)"
 #    echo "               env:HOME=/home/user  environment variables equal query  (c)"
 #    echo "               env:HOME*/home/user  environment variables contains query (c)"
@@ -311,6 +313,8 @@ while [ "$1" != "" ]; do
                                 output_html=$1;;
         -f    | --full )        full_html_report=true;;
         -ec   | --exitcode )    exit_codes=true;;
+        -c    | --comment )     shift  
+                                COMMENT_FIELD=$1;;
         help  | -h | --help )   usage exit ;;
         -v    | --verbose )     _V=1 ;;
         * )                     usage

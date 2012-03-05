@@ -69,6 +69,12 @@
 				    <td width="4%"></td>
 				    <td width="23%"><xsl:value-of select="$basefile"/></td>
 			    </tr>
+                            <tr class="sysinfo"> 
+        			<td width="40%"><xsl:text>comment</xsl:text></td>
+				    <td width="23%"><xsl:value-of select="$docA/system/@comment"/></td>
+				    <td width="4%"></td>
+				    <td width="23%"><xsl:value-of select="$docB/system/@comment"/></td>
+			    </tr>
 			    <tr class="sysinfo"> 
         			<td width="40%"><xsl:text>package counts</xsl:text></td>
 				    <td width="23%"><xsl:value-of select="count($docA/system/packages/package)"/></td>
@@ -81,7 +87,7 @@
 				    <td width="4%"></td>
 				    <td width="23%"><xsl:value-of select="$docB/system/@type"/></td>
 			    </tr>
-     		    <tr class="sysinfo"> 
+     		        <tr class="sysinfo"> 
         			<td width="40%"><xsl:text>systemname</xsl:text></td>
 				    <td width="23%"><xsl:value-of select="$docA/system/@systemname"/></td>
 				    <td width="4%"></td>
@@ -99,7 +105,7 @@
 				    <td width="4%"></td>
 				    <td width="23%"><xsl:value-of select="$docB/system/@hostname"/></td>
 			    </tr>
-                <tr class="sysinfo"> 
+                        <tr class="sysinfo"> 
         			<td width="40%"><xsl:text>pkgmanager</xsl:text></td>
 				    <td width="23%"><xsl:value-of select="$docA/system/@pkgmanager"/></td>
 				    <td width="4%"></td>

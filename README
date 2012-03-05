@@ -31,3 +31,5 @@ xmlenv compare -v -b example/base.xml -o example/result-full.html --full
 -o <html-file> .. save report to somewhere else
 --full .......... show in report 1.equal and 2.current unique(additional) packages
 
+example3: dump with comment
+xmlenv dump -c "before installing dev env"
