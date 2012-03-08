@@ -110,8 +110,15 @@
 				    <td width="23%"><xsl:value-of select="$docA/system/@pkgmanager"/></td>
 				    <td width="4%"></td>
 				    <td width="23%"><xsl:value-of select="$docB/system/@pkgmanager"/></td>
-			    </tr>
-                
+                 	</tr>
+
+                        <tr class="sysinfo"> 
+        			<td width="40%"><xsl:text>info</xsl:text></td>
+				    <td width="23%"><xsl:value-of select="$docA/system/@info"/></td>
+				    <td width="4%"></td>
+				    <td width="23%"><xsl:value-of select="$docB/system/@info"/></td>
+                 	</tr>
+
                 <xsl:call-template name="recurse">
                   <xsl:with-param name="nodesA"
                     select="exslt:node-set($sortedNodesA)/*" />
