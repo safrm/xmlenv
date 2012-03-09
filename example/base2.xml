@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<system type="Linux" systemname="Ubuntu 11.10" arch="i686" info="Linux mirek-1005P 3.0.0-16-generic #28-Ubuntu SMP Fri Jan 27 17:50:54 UTC 2012 i686 i686 i386 GNU/Linux" hostname="my-computername" username="my-username" pkgmanager="dpkg" xmlenv="1.0.1">
+<system type="Linux" systemname="Ubuntu 10.04.4 LTS" arch="i686" info="Linux ul000590 2.6.32-38-generic-pae #83-Ubuntu SMP Wed Jan 4 12:11:13 UTC 2012 i686 GNU/Linux" hostname="ul000590.eu.tieto.com" username="safrrmir" pkgmanager="aptitude" xmlenv="1.0.2">
 <envvars>
-  <envvar name="_" value="./xmlenv" />
 </envvars>
 <packages>
-	<package name="gcc" version="3:4.6.1-2ubuntu5" />
+  <package name="apport" version="0.13.3-0ubuntu2.1" fullpackagename="apport"/>
+  <package name="apport-gtk" version="2.13.3-0ubuntu2.1" fullpackagename="apport-gtk"/>
+  <package name="apport-symptoms" version="0.9" fullpackagename="apport-symptoms"/>
+  <package name="apt" version="1:0.7.25.3ubuntu9.9" fullpackagename="apt"/>
+  <package name="apt-utils" version="0.7.25.3ubuntu9.9" fullpackagename="apt-utils"/>
+  <package name="apt-xapian-index" version="0.25ubuntu2" fullpackagename="apt-xapian-index"/>
 </packages>
 </system>
