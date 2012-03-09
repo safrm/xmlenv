@@ -1,3 +1,14 @@
+xmlenv (1.0.3-1) unstable; urgency=low
+  * Chg: rpm building improvements
+  * New: compare: cmdline pareameter --exitcode to return 1 when some package is not installed
+  * Chg: legal stuff update
+  * New: adedd open base for ubuntu 10.10 usb stick image
+  * New: comment parameter passed by -c "commet" which stores user description of system name e.g. "vanilla ubuntu 10.10"
+  * New: sysinfo comparation in report, system groups keyword added
+  * New: Windows dump and show
+  * Chg: let's use open example
+ -- Miroslav Safr <miroslav.safr@gmail.com>  Fri, 09 Mar 2012 12:42:33 +0200
+
 xmlenv (1.0.2-1) unstable; urgency=low
   * Fix: arch atribute name
   * New: compare: sysinfo in html 
