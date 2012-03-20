@@ -6,6 +6,7 @@ New: colors for some sysinfo comparation
 New: comment for dump as cmdline parameter
 New: test online xsl from https://raw.github.com/safrm/xmlenv/master/compare-pkgs.xsl
 New: test online base.xml  https://raw.github.com/safrm/xmlenv/master/example/base.xml
+New: Statisctics counts from comparation
 
 Done:
 New: Sysinfo in html
