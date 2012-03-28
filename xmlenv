@@ -123,7 +123,6 @@ if [ $cmd_show = 1 -a $group_sysinfo = 1 ]; then
 fi
 }
 
-
 PackagesRequests() {
 XML_HEADER="$XML_HEADER pkgmanager=\"$PREFFERED_MANAGER\" xmlenv=\"$VERSION\" comment=\"$COMMENT_FIELD\">"
 if [ "$cmd_dump" = "1" ]; then
@@ -175,6 +174,29 @@ if [ "x$PREFFERED_MANAGER" = "xaptitude" ]; then
 			echo "installed $COUNT packages"
 		fi
 	fi
+
+	if [ "$cmd_check" = "1" ]; then
+		if [ "$group_pkgver" = "1" ]; then
+			echo "todo: check versions" 
+		elif [ "$group_pkglist" = "1" ]; then #simple list
+			INSTALLED=`aptitude -F '%p' search '~i' --disable-columns | tr \" \' | tr -d \&\<\> | awk '{print $1}'`
+			for PKGNAME in $DATA_LIST
+			do 
+                            FOUND=0
+			    for CHECK in $INSTALLED
+			    do 
+                              if [ "x$CHECK" = "x$PKGNAME" ]; then
+	                         FOUND=1
+				 echo "$PKGNAME installed - OK"
+                              fi
+			    done
+                            if [ $FOUND -eq 0 ]; then
+                               echo "$PKGNAME not installed - exit 1" 
+                               exit 1
+                            fi
+			done
+                fi
+	fi
 fi
 if [ "x$PREFFERED_MANAGER" = "xdpkg" ]; then
 	if [ "$cmd_dump" = "1" ]; then
@@ -205,6 +227,28 @@ if [ "x$PREFFERED_MANAGER" = "xdpkg" ]; then
  			echo "installed $COUNT packages"
 		fi
 	fi
+	if [ "$cmd_check" = "1" ]; then
+		if [ "$group_pkgver" = "1" ]; then
+			echo "todo: check versions" #dpkg -l | awk '/^ii/ {print $2, $3}'
+		elif [ "$group_pkglist" = "1" ]; then #simple list
+			INSTALLED=`dpkg -l | awk '/^ii/ {print $2}'`
+			for PKGNAME in $DATA_LIST
+			do 
+                            FOUND=0
+			    for CHECK in $INSTALLED
+			    do 
+                              if [ "x$CHECK" = "x$PKGNAME" ]; then
+	                            FOUND=1
+				    echo "$PKGNAME installed - OK"
+                              fi
+			    done
+                            if [ $FOUND -eq 0 ]; then
+                               echo "$PKGNAME not installed - exit 1" 
+                               exit 1
+                            fi
+			done
+                fi
+	fi
 fi
 
 #rpm -qa	
@@ -217,13 +261,42 @@ if [ "x$PREFFERED_MANAGER" = "xyum" ]; then
 		yum list installed | tr \" \' | tr -d \&\<\> | awk '{print "  <package name=\"" $1 "\" version=\""$2 "\" />" }' >>  $XML_VERSIONS_FILE	
         	echo "</packages>" >> $XML_VERSIONS_FILE	
 	fi
+
+
 	if [ "$cmd_show" = "1" ]; then
-             yum list installed | tr \" \' | tr -d \&\<\> | awk '{print "$1 " "$2" }'
+		if [ "$group_pkgver" = "1" ]; then
+			 yum list installed | tr \" \' | tr -d \&\<\> | awk '{print "$1 " "$2" }'
+		elif [ "$group_pkglist" = "1" ]; then #simple list
+			 yum list installed | tr \" \' | tr -d \&\<\> | awk '{print "$1"}'
+                fi
         fi
 
 	if [ "$group_pkgcount" = "1" ]; then
 		COUNT=`yum list installed| wc -l`
 		echo "installed $COUNT packages"
+	fi
+
+	if [ "$cmd_check" = "1" ]; then
+		if [ "$group_pkgver" = "1" ]; then
+			echo "todo: check versions" 
+		elif [ "$group_pkglist" = "1" ]; then #simple list
+			INSTALLED=`aptitude -F '%p' search '~i' --disable-columns | tr \" \' | tr -d \&\<\> | awk '{print $1}'`
+			for PKGNAME in $DATA_LIST
+			do 
+                            FOUND=0
+			    for CHECK in $INSTALLED
+			    do 
+                              if [ "x$CHECK" = "x$PKGNAME" ]; then
+	                        FOUND=1
+				echo "$PKGNAME installed - OK" 
+                              fi
+			    done
+                            if [ $FOUND -eq 0 ]; then
+                               echo "$PKGNAME not installed - exit 1" 
+                               exit 1
+                            fi
+			done
+                fi
 	fi
 fi
 
@@ -247,6 +320,7 @@ usage() {
     echo " show - shows requested info"
     echo " dump - dumps requsted info"
     echo " compare <local or http base.xml> - compares requested info "
+    echo " check - check if packages are installed"
     echo "    groups: all or empty = default"
     echo "    default"
     echo "               pkglist  installed  package list (s,d)"
@@ -278,12 +352,14 @@ exit_codes=false
 cmd_show=0
 cmd_dump=0
 cmd_compare=0
+cmd_check=0
 group_pkglist=0
 group_pkgver=0
 group_sysinfo=0
 group_descr=0
 group_envvar=0
 group_pkgcount=0
+DATA_LIST=
 _V=0  				#verbose
 
 while [ "$1" != "" ]; do
@@ -291,6 +367,7 @@ while [ "$1" != "" ]; do
         show )                  cmd_show=1 ;;
         dump )                  cmd_dump=1 ;;
         compare )               cmd_compare=1 ;;
+        check )                 cmd_check=1 ;;
         all )                   group_pkglist=1
                 				group_pkgver=1
 		                        group_sysinfo=1
@@ -317,8 +394,8 @@ while [ "$1" != "" ]; do
                                 COMMENT_FIELD=$1;;
         help  | -h | --help )   usage exit ;;
         -v    | --verbose )     _V=1 ;;
-        * )                     usage
-                                exit 1
+        * )                     DATA_LIST=`echo $1 | tr "," "\n"`;;
+
     esac
     shift
 done
@@ -331,7 +408,7 @@ if [ "$group_pkglist" = "0" -a "$group_pkgver" = "0" -a "$group_sysinfo" = "0" -
         group_envvar=1
 	group_pkgcount=1
 fi
-log "show=$cmd_show dump=$cmd_dump compare=$cmd_compare"
+log "show=$cmd_show dump=$cmd_dump compare=$cmd_compare check=$cmd_check"
 if [ $cmd_show = 1 -o  $cmd_dump = 1 ]; then
 	log "running show or dump";
 	Init
@@ -358,6 +435,12 @@ elif [ $cmd_compare = 1  ]; then
 		echo "comparation result written to `readlink -f $output_html`"
         fi
     fi
+elif [ $cmd_check = 1  ]; then 
+	log "running check";
+	Init #todo maybe separate manager check
+	if [ $group_pkglist = 1 -o $group_pkgver = 1 -o $group_envvar = 1 ]; then
+		PackagesRequests
+	fi
 else
    	echo "wrong parameters";
         usage

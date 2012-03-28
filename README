@@ -18,7 +18,8 @@ usage:
 ./xmlenv help ......... shows help
 ./xmlenv show ......... show the records
 ./xmlenv dump ......... create pkgversions.xml
-./xmlenv compare ......... creates pkgversions.xml dump and compares it with base.xml
+./xmlenv compare ...... creates pkgversions.xml dump and compares it with base.xml
+./xmlenv check ........ checks system parameters given by commandline comma separated array
 
 
 example1: generate default (short) comparation report:
@@ -33,3 +34,9 @@ xmlenv compare -v -b example/base.xml -o example/result-full.html --full
 
 example3: dump with comment
 xmlenv dump -c "before installing dev env"
+
+
+example4: check installed packages
+./xmlenv check pkglist gcc,gdb  .. returns 0
+./xmlenv check pkglist gcc,gdb,not-existing .. returns 1
+
