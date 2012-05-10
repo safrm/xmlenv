@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
- - Date:      2012/02/23
  - Author:    "Miroslav Safr" <miroslav.safr@gmail.com>
+ - Version:   
  - ThanksTo:  Matusz for help with version XSLT transformation - Dezso Denes <denes.dezco@gmail.com>
  - Desc:      package versions comparation for xmlenv files 
 -->
