@@ -42,13 +42,12 @@ export INSTALL_ROOT=$RPM_BUILD_ROOT
 mkdir -p %{buildroot}%{_bindir}
 mkdir -p %{buildroot}%{_datadir}/xmlenv
 install -m 755 ./xmlenv %{buildroot}/usr/bin/
+sed -i".bkp" "s/^VERSION=.*/VERSION=%{version}/" %{buildroot}%{_bindir}/xmlenv && rm -f %{buildroot}%{_bindir}/xmlenv.bkp
 install -m 755 ./compare-pkgs.xsl %{buildroot}%{_datadir}/xmlenv/
+sed -i".bkp" "s/Version:   */Version:   %{version}/"  %{buildroot}%{_datadir}/xmlenv/compare-pkgs.xsl && rm -f %{buildroot}%{_datadir}/xmlenv/compare-pkgs.xsl.bkp
 
 # >> install post
 # << install post
-
-
-
 
 
 
