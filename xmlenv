@@ -314,13 +314,14 @@ log() {
 }
 
 usage() {
-    echo "xmlshow ${VERSION}"
+    echo "`basename $0` ${VERSION}"
     echo " commands: "
-    echo " help - prints this help"
-    echo " show - shows requested info"
-    echo " dump - dumps requsted info"
-    echo " compare <local or http base.xml> - compares requested info "
-    echo " check - check if packages are installed"
+    echo " help .............................. prints this help"
+    echo " --version ......................... prints only version number"
+    echo " show .............................. shows requested info"
+    echo " dump .............................. dumps requsted info"
+    echo " compare <local or http base.xml> .. compares requested info "
+    echo " check ............................. check if packages are installed"
     echo "    groups: all or empty = default"
     echo "    default"
     echo "               pkglist  installed  package list (s,d)"
