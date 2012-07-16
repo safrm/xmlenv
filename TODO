@@ -7,6 +7,7 @@ New: comment for dump as cmdline parameter
 New: test online xsl from https://raw.github.com/safrm/xmlenv/master/compare-pkgs.xsl
 New: test online base.xml  https://raw.github.com/safrm/xmlenv/master/example/base.xml
 New: Statisctics counts from comparation
+New: compare without dump (can be done on different computer)
 
 Done:
 New: Sysinfo in html

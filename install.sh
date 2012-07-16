@@ -12,7 +12,7 @@ USERID=`id -u`
 }
 
 #automatic version 
-. appver
+. appver || APP_FULL_VERSION_TAG=NA
 
 mkdir -p -m 0755 $BINDIR
 mkdir -p -m 0755 $DATADIR/xmlenv/

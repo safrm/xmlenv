@@ -49,8 +49,6 @@ sed -i".bkp" "1,/Version: /s/Version:   */Version:   %{version}/"  %{buildroot}%
 # >> install post
 # << install post
 
-
-
 %files
 %defattr(-,root,root,-)
 # >> files
