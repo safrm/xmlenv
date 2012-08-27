@@ -7,8 +7,9 @@
 #TODO
 #yum -remove .i386 from package name
 #aptitude - remove ubuntu packaging tag from version 
+VERSION=NA                                                                   
+VERSION_DATE=NA
 
-VERSION=NA
 XML_VERSIONS_FILE=./pkgversions.xml
 XML_DESCRIPTIONS_FILE=./pkgdescriptions.xml
 XML_HEADER_START="<?xml version=\"1.0\" encoding=\"utf-8\"?>"
@@ -395,7 +396,7 @@ while [ "$1" != "" ]; do
                                 COMMENT_FIELD=$1;;
         help  | -h | --help )   usage exit ;;
         -v    | --verbose )     _V=1 ;;
-        --version)    echo "`basename $0` $VERSION" exit 0 ;;  
+        --version)    echo "`basename $0` $VERSION ${VERSION_DATE}" exit 0 ;;  
         * )                     DATA_LIST=`echo $1 | tr "," "\n"`;;
 
     esac
