@@ -12,7 +12,7 @@ USERID=`id -u`
 }
 
 #automatic version 
-. appver || APP_FULL_VERSION_TAG=NA && APP_BUILD_DATE=`date +'%Y%m%d_%H%M'`
+if [ command -v appver >/dev/null 2>&1 ]; then . appver; else APP_FULL_VERSION_TAG=NA ; APP_BUILD_DATE=`date +'%Y%m%d_%H%M'`; fi
 
 mkdir -p -m 0755 $BINDIR
 mkdir -p -m 0755 $DATADIR/xmlenv/
