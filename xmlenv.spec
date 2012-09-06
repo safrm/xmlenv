@@ -52,6 +52,7 @@ sed -i".bkp" "1,/Version: /s/Version:   */Version:   %{version} %{APP_BUILD_DATE
 %defattr(-,root,root,-)
 # >> files
 %{_bindir}/xmlenv
+%dir %{_datadir}/xmlenv
 %{_datadir}/xmlenv/compare-pkgs.xsl
 # << files
 
