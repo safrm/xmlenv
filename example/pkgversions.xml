@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<system type="Linux" systemname="Ubuntu 10.04.4 LTS" arch="i686" info="Linux ul000590 2.6.32-38-generic-pae #83-Ubuntu SMP Wed Jan 4 12:11:13 UTC 2012 i686 GNU/Linux" hostname="ul000590.eu.tieto.com" username="safrrmir" pkgmanager="aptitude" xmlenv="1.0.2">
+<system type="Linux" systemname="Ubuntu 10.04.4 LTS" arch="i686" info="Linux ul000590 2.6.32-38-generic-pae #83-Ubuntu SMP Wed Jan 4 12:11:13 UTC 2012 i686 GNU/Linux" hostname="computer.domain.com" username="username" pkgmanager="aptitude" xmlenv="1.0.2">
 <envvars>
   <envvar name="COLORTERM" value="gnome-terminal" />
   <envvar name="DBUS_SESSION_BUS_ADDRESS" value="unix:abstract" />
