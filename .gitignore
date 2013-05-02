@@ -1,5 +1,6 @@
 rpm/*
 debian/files
+debian/changelog
 debian/xmlenv.debhelper.log
 debian/xmlenv.substvars
 debian/xmlenv/*
