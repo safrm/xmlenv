@@ -1,5 +1,5 @@
 #!/bin/sh
-#multiplatformal/distribution system dumping and comparation - https://github.com/safrm/xmlenv
+#multiplatformal/distribution system dumping and comparation - http://safrm.net/projects/xmlenv
 #author:  Miroslav Safr <miroslav.safr@gmail.com>
 #script to dump installed packages to xml file
 #tested with tubuntu 10.10, Fedora 9 (CentOS)

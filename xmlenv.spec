@@ -8,7 +8,7 @@ Release:    1
 Group:      System/Libraries
 License:    LGPL v2.1
 BuildArch:  noarch
-URL:        https://github.com/safrm/xmlenv
+URL:        http://safrm.net/projects/xmlenv
 Vendor:     Miroslav Safr <miroslav.safr@gmail.com>
 Source0:    %{name}-%{version}.tar.bz2
 Autoreq: on

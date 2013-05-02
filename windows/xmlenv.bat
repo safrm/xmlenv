@@ -1,4 +1,4 @@
-@REM multiplatformal/distribution system dumping and comparation - https://github.com/safrm/xmlenv
+@REM multiplatformal/distribution system dumping and comparation - http://safrm.net/projects/xmlenv
 @REM author:  Miroslav Safr miroslav.safr@gmail.com
 @ECHO OFF
 :Loop

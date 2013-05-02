@@ -2,7 +2,7 @@
 '/
 '/  Name:            xmlenv.vbs
 '/  Author:          Miroslav Safr <miroslav.safr@gmail.com>
-'/  Web:             https://github.com/safrm/xmlenv
+'/  Web:             http://safrm.net/projects/xmlenv
 '/  
 '/  Description:     multiplatformal/distribution system dumping and comparation 
 '/
@@ -324,7 +324,7 @@ End Function
 '
 Sub ShowHelpMessage
   Wscript.Echo " xmlenv dumps and compare installed programms in MSI source paths" &_
-	vbNewLine & " https://github.com/safrm/xmlenv" &_
+	vbNewLine & " http://safrm.net/projects/xmlenv" &_
 	vbNewLine & "  MUST BE RUN IN CSCRIPT!" &_
 	vbNewLine & " " &_
 	vbNewLine & " commands: " &_

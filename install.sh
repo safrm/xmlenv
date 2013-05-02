@@ -1,5 +1,5 @@
 #/bin/sh
-#multiplatformal/distribution system dumping and comparation - https://github.com/safrm/xmlenv
+#multiplatformal/distribution system dumping and comparation - http://safrm.net/projects/xmlenv
 #author:  Miroslav Safr <miroslav.safr@gmail.com>
 BINDIR=/usr/bin
 DATADIR=/usr/share
