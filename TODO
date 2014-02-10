@@ -8,6 +8,8 @@ New: test online xsl from https://raw.github.com/safrm/xmlenv/master/compare-pkg
 New: test online base.xml  https://raw.github.com/safrm/xmlenv/master/example/base.xml
 New: Statisctics counts from comparation
 New: compare without dump (can be done on different computer)
+Fix: yum -remove .i386 from package name
+Fix: aptitude - remove ubuntu packaging tag from version 
 
 Done:
 New: Sysinfo in html

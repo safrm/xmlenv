@@ -1,27 +1,60 @@
 #!/bin/sh
 #multiplatformal/distribution system dumping and comparation - http://safrm.net/projects/xmlenv
 #author:  Miroslav Safr <miroslav.safr@gmail.com>
-#script to dump installed packages to xml file
-#tested with tubuntu 10.10, Fedora 9 (CentOS)
-
-#TODO
-#yum -remove .i386 from package name
-#aptitude - remove ubuntu packaging tag from version 
 VERSION=NA                                                                   
 VERSION_DATE=NA
 
+#support color escape characters on different terminals
+alias echo="/bin/echo -e"
+BASENAME=`basename $0`
+usage() {
+    echo "$BASENAME ${VERSION} - dump and compare environments by xml"
+    echo " http://safrm.net/projects/xmlenv/"
+    echo "Usage:$BASENAME COMMANDS ... [OPTIONS] "
+    echo " commands: "
+    echo " help .............................. prints this help"
+    echo " --version ......................... prints only version number"
+    echo " show .............................. shows requested info"
+    echo " dump .............................. dumps requsted info"
+    echo " backup ............................ dumps state with timestamp format"
+    echo " compare <local or http base.xml> .. compares requested info "
+    echo " check ............................. check if packages are installed"
+    echo "    groups: all or empty = default"
+    echo "    default"
+    echo "               pkglist  installed  package list (s,d)"
+    echo "       *       pkgver  installed package versions (s,d)"
+    echo "               pkgver gcc   package versions of one package (s,d)"
+    echo "       *       env  environment variables according file (s,d)"
+    echo "       *       sys   system info (s,d)"
+    echo "               pkgdescr  packages with description (d)"
+    echo "       *       pkgcount  number of installed packages (s)"
+    echo "               -f --full  generates report with equal and current unique (additional) packages (c)"
+    echo "               -o --output <html-file> write output to different file (c)"
+    echo "               -b --base <xml-file> select base comparation file (c)"
+    echo "               -v --verbose  get more output (s,d,c)"
+    echo "               -ec --exitcode  comparation returns 1 if there are some packages missing (c)"
+    echo "               -c --comment \"example comment\" stores comment to dump (s,d,c)"
+#    echo "               pkgver gcc>=3.0  manual comparation for one version (c)"
+#    echo "               env:HOME=/home/user  environment variables equal query  (c)"
+#    echo "               env:HOME*/home/user  environment variables contains query (c)"
+#    echo "               sys:system=linux    system specifications equal query (c)"
+#    echo "               sys:release>=\"fedora 9\"  system specifications equal or higher query (c)"
+    echo " "
+}
+
+XMLENV_BACKUP_DIR=~/.xmlenv
 XML_VERSIONS_FILE=./pkgversions.xml
 XML_DESCRIPTIONS_FILE=./pkgdescriptions.xml
 XML_HEADER_START="<?xml version=\"1.0\" encoding=\"utf-8\"?>"
 XML_HEADER="<system "
 PREFFERED_MANAGER=""           #dpkg
 MANAGERS="managers: "          #status
-RIGHT_NOW=$(date +"%x %r %Z")
+TS=$(date +"%Y%m%d_%H%M")
 COMMENT_FIELD=""
 
 Init() {
 #header - os type --------------------------------------------------------
-if [ -r `which uname 2>/dev/null` ]; then
+if ! type -P uname > /dev/null 2>&1; then 
         OSTYPE=`uname`
         log "type=$OSTYPE";
 fi
@@ -33,8 +66,7 @@ XML_HEADER="$XML_HEADER type=\"$OSTYPE\" "
 fi
 
 #header - system name --------------------------------------------------- 
-if [ -r `which lsb_release 2>/dev/null` ]; then
-#if $(type -P lsb_release > /dev/null); then \
+if ! type -P lsb_release > /dev/null 2>&1; then 
 	SYSTEMNAME=`lsb_release -d | sed 's/^Description:[[:space:]]//g'`
     log "systemname=$SYSTEMNAME";
 fi
@@ -46,7 +78,7 @@ XML_HEADER="$XML_HEADER systemname=\"$SYSTEMNAME\" "
 fi
 
 #header - os info + arch separately --------------------------------------
-if [ -r `which uname 2>/dev/null` ]; then
+if ! type -P uname > /dev/null 2>&1; then 
 	OSINFO=`uname -a `
 	OSARCH=`uname -m`
     log "arch=$OSARCH";
@@ -60,9 +92,9 @@ else
 fi
 
 #header - computername ----------------------------------------------------
-if [ -r `which hostname 2>/dev/null` ]; then
+if ! type -P hostname > /dev/null 2>&1; then 
 	HOSTNAME=`hostname -f`
-        log "hostname=$HOSTNAME";
+    log "hostname=$HOSTNAME";
 fi
 if [ "x$HOSTNAME" = "x" ]
 then
@@ -72,9 +104,9 @@ XML_HEADER="$XML_HEADER hostname=\"$HOSTNAME\""
 fi
 
 #header - username ----------------------------------------------------
-if $(type -P whoami > /dev/null); then \
+if ! type -P whoami > /dev/null 2>&1; then 
 	USERNAME=`whoami`
-        log "username=$USERNAME";
+    log "username=$USERNAME";
 fi
 if [ "x$USERNAME" = "x" ]
 then
@@ -126,7 +158,7 @@ fi
 
 PackagesRequests() {
 XML_HEADER="$XML_HEADER pkgmanager=\"$PREFFERED_MANAGER\" xmlenv=\"$VERSION\" comment=\"$COMMENT_FIELD\">"
-if [ "$cmd_dump" = "1" ]; then
+if [ $cmd_dump = 1 -o  $cmd_backup = 1 ]; then
 	echo $XML_HEADER_START > $XML_VERSIONS_FILE
 	echo $XML_HEADER >> $XML_VERSIONS_FILE
 fi
@@ -135,7 +167,7 @@ fi
 			if [ $cmd_show = 1 ]; then
 				env | tr -d \"\'\|\%\\  | sort -V -s -u |  awk -F= ' { print $1 "=" $2 }'
 			fi
-			if [ $cmd_dump = 1 ]; then
+			if [ $cmd_dump = 1 -o  $cmd_backup = 1 ]; then
 				echo "<envvars>" >> $XML_VERSIONS_FILE
 				env | tr -d \"\'\|\%\\  | sort -V -s -u | awk -F= ' { print "  <envvar name=\""$1"\" value=\""$2"\" />" }' >>  $XML_VERSIONS_FILE
 				echo "</envvars>" >> $XML_VERSIONS_FILE
@@ -145,7 +177,7 @@ fi
 #packages ------------------------------------------------------------------------------
 if [ "x$PREFFERED_MANAGER" = "xaptitude" ]; then
         #curently only for apt
-	if [ "$cmd_dump" = "1" ]; then
+	if [ $cmd_dump = 1 -o  $cmd_backup = 1 ]; then
 		if [ "$group_descr" = "1" ]; then
 			echo $XML_HEADER_START > $XML_DESCRIPTIONS_FILE
 			echo $XML_HEADER >> $XML_DESCRIPTIONS_FILE
@@ -200,7 +232,7 @@ if [ "x$PREFFERED_MANAGER" = "xaptitude" ]; then
 	fi
 fi
 if [ "x$PREFFERED_MANAGER" = "xdpkg" ]; then
-	if [ "$cmd_dump" = "1" ]; then
+	if [ $cmd_dump = 1 -o  $cmd_backup = 1 ]; then
 		if [ "$group_descr" = "1" ]; then
 			echo $XML_HEADER_START > $XML_DESCRIPTIONS_FILE
 			echo $XML_HEADER >> $XML_DESCRIPTIONS_FILE
@@ -257,7 +289,7 @@ fi
 #yum 
 if [ "x$PREFFERED_MANAGER" = "xyum" ]; then
 	#packages
-	if [ "$cmd_dump" = "1" ]; then
+	if [ $cmd_dump = 1 -o  $cmd_backup = 1 ]; then
 		echo "<packages>" >> $XML_VERSIONS_FILE	
 		yum list installed | tr \" \' | tr -d \&\<\> | awk '{print "  <package name=\"" $1 "\" version=\""$2 "\" />" }' >>  $XML_VERSIONS_FILE	
         	echo "</packages>" >> $XML_VERSIONS_FILE	
@@ -302,7 +334,7 @@ if [ "x$PREFFERED_MANAGER" = "xyum" ]; then
 fi
 
 #footer
-if [ "$cmd_dump" = "1" ]; then
+if [ $cmd_dump = 1 -o $cmd_dump = 1 ]; then
 	echo "</system>" >> $XML_VERSIONS_FILE
 fi
 }
@@ -314,37 +346,6 @@ log() {
     fi
 }
 
-usage() {
-    echo "`basename $0` ${VERSION}"
-    echo " commands: "
-    echo " help .............................. prints this help"
-    echo " --version ......................... prints only version number"
-    echo " show .............................. shows requested info"
-    echo " dump .............................. dumps requsted info"
-    echo " compare <local or http base.xml> .. compares requested info "
-    echo " check ............................. check if packages are installed"
-    echo "    groups: all or empty = default"
-    echo "    default"
-    echo "               pkglist  installed  package list (s,d)"
-    echo "       *       pkgver  installed package versions (s,d)"
-    echo "               pkgver gcc   package versions of one package (s,d)"
-    echo "       *       env  environment variables according file (s,d)"
-    echo "       *       sys   system info (s,d)"
-    echo "               pkgdescr  packages with description (d)"
-    echo "       *       pkgcount  number of installed packages (s)"
-    echo "               -f --full  generates report with equal and current unique (additional) packages (c)"
-    echo "               -o --output <html-file> write output to different file (c)"
-    echo "               -b --base <xml-file> select base comparation file (c)"
-    echo "               -v --verbose  get more output (s,d,c)"
-    echo "               -ec --exitcode  comparation returns 1 if there are some packages missing (c)"
-    echo "               -c --comment \"example comment\" stores comment to dump (s,d,c)"
-#    echo "               pkgver gcc>=3.0  manual comparation for one version (c)"
-#    echo "               env:HOME=/home/user  environment variables equal query  (c)"
-#    echo "               env:HOME*/home/user  environment variables contains query (c)"
-#    echo "               sys:system=linux    system specifications equal query (c)"
-#    echo "               sys:release>=\"fedora 9\"  system specifications equal or higher query (c)"
-
-}
 
 interactive=
 base_xml=`pwd`/base.xml
@@ -353,6 +354,7 @@ full_html_report=false
 exit_codes=false
 cmd_show=0
 cmd_dump=0
+cmd_backup=0
 cmd_compare=0
 cmd_check=0
 group_pkglist=0
@@ -368,6 +370,7 @@ while [ "$1" != "" ]; do
     case $1 in
         show )                  cmd_show=1 ;;
         dump )                  cmd_dump=1 ;;
+        backup )                  cmd_backup=1 ;;
         compare )               cmd_compare=1 ;;
         check )                 cmd_check=1 ;;
         all )                   group_pkglist=1
@@ -408,12 +411,18 @@ if [ "$group_pkglist" = "0" -a "$group_pkgver" = "0" -a "$group_sysinfo" = "0" -
 	group_pkglist=1
 	group_pkgver=1
 	group_sysinfo=1
-        group_envvar=1
+    group_envvar=1
 	group_pkgcount=1
 fi
-log "show=$cmd_show dump=$cmd_dump compare=$cmd_compare check=$cmd_check"
-if [ $cmd_show = 1 -o  $cmd_dump = 1 ]; then
-	log "running show or dump";
+log "show=$cmd_show dump=$cmd_dump backup=$cmd_backup compare=$cmd_compare check=$cmd_check"
+if [ $cmd_show = 1 -o $cmd_dump = 1 -o $cmd_backup = 1 ]; then
+	log "running show, dump or backup";
+	if [ $cmd_backup = 1 ]; then
+	    test -e $XMLENV_BACKUP_DIR ||  mkdir $XMLENV_BACKUP_DIR
+        XML_VERSIONS_FILE=$XMLENV_BACKUP_DIR/pkgversions-$TS.xml
+        XML_DESCRIPTIONS_FILE=$XMLENV_BACKUP_DIR/pkgdescriptions-$TS.xml
+        echo "backup will be stored in:$XML_VERSIONS_FILE"
+    fi
 	Init
 	if [ $group_pkglist = 1 -o $group_pkgver = 1 -o $group_envvar = 1 -o $group_pkgcount = 1 -o $group_descr = 1 ]; then
 		PackagesRequests
