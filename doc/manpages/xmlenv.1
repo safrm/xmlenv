@@ -1,0 +1,132 @@
+'\" t
+.\"     Title: xmlenv
+.\"    Author: Miroslav Safr <miroslav.safr@gmail.com>
+.\" Generator: DocBook XSL Stylesheets v1.76.1 <http://docbook.sf.net/>
+.\"      Date: 20140213_1251
+.\"    Manual: multiplatformal/distribution system dumping and comparation
+.\"    Source: xmlenv 1.1.0
+.\"  Language: English
+.\"
+.TH "XMLENV" "1" "20140213_1251" "xmlenv 1.1.0" "multiplatformal/distribution s"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+xmlenv \- multiplatformal/distribution system dumping and comparation
+.SH "SYNOPSIS"
+.HP \w'\fBxmlenv\ COMMANDS\ [GROUPS]\ \&.\&.\&.\ [OPTIONS]\fR\ 'u
+\fBxmlenv COMMANDS [GROUPS] \&.\&.\&. [OPTIONS]\fR [\-\-version] [\-f\ \-\-full] [\-o\ \-\-output\ <html\-file>] [\-b\ \-\-base\ <xml\-file>] [\-v\ \-\-verbose] [\-ec\ \-\-exitcode] [\-c\ \-\-comment\ <"example\ comment">]
+.SH "DESCRIPTION"
+.PP
+Multiplatformal/distribution system dumping and comparation\&.
+.SH "COMMANDS"
+.PP
+
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+          help \&.\&.\&.\&.\&.\&.\&.\&.\&.\&. shows help 
+          show \&.\&.\&.\&.\&.\&.\&.\&.\&.\&. shows files in package (s)
+          dump \&.\&.\&.\&.\&.\&.\&.\&.\&.\&. creates pkgversions\&.xml (d)
+          compare \&.\&.\&.\&.\&.\&.\&. creates pkgversions\&.xml dump and compares it with base\&.xml (c)
+          check \&.\&.\&.\&.\&.\&.\&.\&.\&. checks system parameters given by commandline comma separated array (b)
+        
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+.SH "GROUPS"
+.PP
+
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+     all or empty = default
+       default
+     \-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+                 pkglist  installed  package list (s,d)
+         *       pkgver  installed package versions (s,d)
+                 pkgver gcc   package versions of one package (s,d)
+         *       env  environment variables according file (s,d)
+         *       sys   system info (s,d)
+                 pkgdescr  packages with description (d)
+         *       pkgcount  number of installed packages (s)
+    
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+.SH "OPTIONS"
+[\-\-version].PP
+\-\-version
+.RS 4
+Prints only version number
+.RE
+.PP
+\-f \-\-full
+.RS 4
+Generates report with equal and current unique (additional) packages (c)\&.
+.RE
+.PP
+\-o \-\-output <html\-file>
+.RS 4
+Writes output to different file (c)\&. (default is \&./pkgversion\&.xml)
+.RE
+.PP
+\-b \-\-base <xml\-file>
+.RS 4
+Selects base comparation file (c)\&. (default is \&./base\&.xml)
+.RE
+.PP
+\-v \-\-verbose
+.RS 4
+Prints more output(s,d,c)"\&.
+.RE
+.PP
+\-ec \-\-exitcode
+.RS 4
+Comparation returns 1 if there are some packages missing (c)\&.
+.RE
+.PP
+\-c \-\-comment <"example comment">
+.RS 4
+Stores comment to dump (s,d,c)\&.
+.RE
+.SH "SEE ALSO"
+.PP
+xmlenv(1)\&.
+\m[blue]\fB\%http://safrm.net/projects/xmlenv\fR\m[]
+.SH "AUTHOR"
+
+    Miroslav Šafr <miroslav\&.safr@gmail\&.com>
+  .SH "LICENSE"
+
+   LGPL2
+  .SH "AUTHOR"
+.PP
+\fBMiroslav Safr\fR <\&miroslav\&.safr@gmail\&.com\&>
+.RS 4
+Author and maintainer
+.RE

@@ -5,3 +5,4 @@ debian/xmlenv.debhelper.log
 debian/xmlenv.substvars
 debian/xmlenv/*
 xmlenv.changes
+doc/tmp

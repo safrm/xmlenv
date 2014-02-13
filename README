@@ -20,7 +20,7 @@ usage:
 ./xmlenv dump ......... create pkgversions.xml
 ./xmlenv compare ...... creates pkgversions.xml dump and compares it with base.xml
 ./xmlenv check ........ checks system parameters given by commandline comma separated array
-
+./xmlenv backup ....... dumps  pkgversions.xml to ~/.xmlenv/pkgversions_<timestamp>.xml
 
 example1: generate default (short) comparation report:
 xmlenv compare -b example/base.xml -o example/result-short.html 

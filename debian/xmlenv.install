@@ -1,3 +1,5 @@
 xmlenv /usr/bin/
 compare-pkgs.xsl /usr/share/xmlenv/
-
+README /usr/share/doc/xmlenv
+LICENSE.LGPL /usr/share/doc/xmlenv
+doc/manpages/xmlenv.1  /usr/share/man/man1

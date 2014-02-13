@@ -1,0 +1,45 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>xmlenv</title><meta name="generator" content="DocBook XSL Stylesheets V1.76.1"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="refentry" title="xmlenv"><a name="xmlenv.1"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>xmlenv &#8212; multiplatformal/distribution system dumping and comparation</p></div><div class="refsynopsisdiv" title="Synopsis"><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command">xmlenv COMMANDS [GROUPS] ... [OPTIONS]</code>  [--version] [-f --full] [-o --output &lt;html-file&gt;] [-b --base &lt;xml-file&gt;] [-v --verbose] [-ec --exitcode] [-c --comment  &lt;"example comment"&gt;]</p></div></div><div class="refsect1" title="DESCRIPTION"><a name="idp60624"></a><h2>DESCRIPTION</h2><p>
+      Multiplatformal/distribution system dumping and comparation.
+    </p></div><div class="refsect1" title="COMMANDS"><a name="idp61216"></a><h2>COMMANDS</h2><p>
+        </p><pre class="screen">
+          help .......... shows help 
+          show .......... shows files in package (s)
+          dump .......... creates pkgversions.xml (d)
+          compare ....... creates pkgversions.xml dump and compares it with base.xml (c)
+          check ......... checks system parameters given by commandline comma separated array (b)
+        </pre><p>
+    </p></div><div class="refsect1" title="GROUPS"><a name="idp62456"></a><h2>GROUPS</h2><p>
+    </p><pre class="screen">
+     all or empty = default
+       default
+     ----------------------------------------------------
+                 pkglist  installed  package list (s,d)
+         *       pkgver  installed package versions (s,d)
+                 pkgver gcc   package versions of one package (s,d)
+         *       env  environment variables according file (s,d)
+         *       sys   system info (s,d)
+                 pkgdescr  packages with description (d)
+         *       pkgcount  number of installed packages (s)
+    </pre><p>
+    </p></div><div class="refsect1" title="OPTIONS"><a name="idp63864"></a><h2>OPTIONS</h2><div class="variablelist">[--version]<dl><dt><span class="term">--version</span></dt><dd><p>
+            Prints only version number
+          </p></dd><dt><span class="term">-f --full</span></dt><dd><p>
+            Generates report with equal and current unique (additional) packages (c).
+          </p></dd><dt><span class="term">-o --output &lt;html-file&gt;</span></dt><dd><p>
+            Writes output to different file (c). (default is ./pkgversion.xml)
+          </p></dd><dt><span class="term">-b --base &lt;xml-file&gt;</span></dt><dd><p>
+           Selects base comparation file (c). (default is ./base.xml)
+          </p></dd><dt><span class="term">-v --verbose</span></dt><dd><p>
+            Prints more output(s,d,c)".
+          </p></dd><dt><span class="term">-ec --exitcode</span></dt><dd><p>
+            Comparation returns 1 if there are some packages missing (c).
+          </p></dd><dt><span class="term">-c --comment  &lt;"example comment"&gt;</span></dt><dd><p>
+            Stores comment to dump (s,d,c).
+          </p></dd></dl></div></div><div class="refsect1" title="SEE ALSO"><a name="idp70344"></a><h2>SEE ALSO</h2><p>
+      xmlenv(1).
+      <a class="ulink" href="http://safrm.net/projects/xmlenv" target="_top">http://safrm.net/projects/xmlenv</a>
+    </p></div><div class="refsect1" title="AUTHOR"><a name="idp71104"></a><h2>AUTHOR</h2>
+    Miroslav &#352;afr &lt;miroslav.safr@gmail.com&gt;
+  </div><div class="refsect1" title="LICENSE"><a name="idp71560"></a><h2>LICENSE</h2>
+   LGPL2
+  </div></div></body></html>

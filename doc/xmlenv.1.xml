@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<refentry id="xmlenv.1">
+
+<refentryinfo>
+    <title>multiplatformal/distribution system dumping and comparation</title>
+    <author>
+        <personname><firstname>Miroslav</firstname><surname>Safr</surname></personname>
+        <email>miroslav.safr@gmail.com</email>
+        <personblurb><para>Author and maintainer</para></personblurb>
+    </author>
+    <date>2013-02-03</date>
+    <productnumber>NA</productnumber>
+    <productname>xmlenv</productname>
+</refentryinfo>
+
+<refmeta>
+    <refentrytitle>xmlenv</refentrytitle>
+	<manvolnum>1</manvolnum>
+</refmeta>
+
+
+<refnamediv>
+    <refname>xmlenv</refname>
+    <refpurpose>multiplatformal/distribution system dumping and comparation</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<cmdsynopsis>
+        <command>xmlenv COMMANDS [GROUPS] ... [OPTIONS]</command>
+		<arg choice="opt">--version</arg>
+    	<arg choice="opt">-f --full</arg>
+		<arg choice="opt">-o --output &lt;html-file&gt;</arg>
+		<arg choice="opt">-b --base &lt;xml-file&gt;</arg>
+	    <arg choice="opt">-v --verbose</arg>
+  	    <arg choice="opt">-ec --exitcode</arg>
+   		<arg choice="opt">-c --comment  &lt;"example comment"&gt;</arg>
+    </cmdsynopsis>
+</refsynopsisdiv>
+
+
+  <refsect1><title>DESCRIPTION</title>
+    <para>
+      Multiplatformal/distribution system dumping and comparation. There is also windows version available.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>COMMANDS</title>
+    <para>
+        <screen format="linespecific">
+          help .......... shows help 
+          show .......... shows files in package (s)
+          dump .......... creates pkgversions.xml (d)
+          compare ....... creates pkgversions.xml dump and compares it with base.xml (c)
+          check ......... checks system parameters given by commandline comma separated array (b)
+        </screen>
+    </para>
+  </refsect1>
+  
+  <refsect1>
+    <title>GROUPS</title>
+    <para>
+    <screen format="linespecific">
+     all or empty = default
+       default
+     ----------------------------------------------------
+                 pkglist  installed  package list (s,d)
+         *       pkgver  installed package versions (s,d)
+                 pkgver gcc   package versions of one package (s,d)
+         *       env  environment variables according file (s,d)
+         *       sys   system info (s,d)
+                 pkgdescr  packages with description (d)
+         *       pkgcount  number of installed packages (s)
+    </screen>
+    </para>
+  </refsect1>
+  
+
+  <refsect1>
+    <title>OPTIONS</title>
+     <variablelist>
+      <varlistentry><term>--version</term>
+        <listitem>
+          <para>
+            Prints only version number
+          </para>
+        </listitem>
+      </varlistentry>
+      
+      <varlistentry><term>-f --full</term>
+        <listitem>
+          <para>
+            Generates report with equal and current unique (additional) packages (c).
+          </para>
+        </listitem>
+      </varlistentry>
+      
+      <varlistentry><term>-o --output &lt;html-file&gt;</term>
+        <listitem>
+          <para>
+            Writes output to different file (c). (default is ./pkgversion.xml)
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry><term>-b --base &lt;xml-file&gt;</term>
+        <listitem>
+          <para>
+           Selects base comparation file (c). (default is ./base.xml)
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry><term>-v --verbose</term>
+        <listitem>
+          <para>
+            Prints more output(s,d,c)".
+          </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry><term>-ec --exitcode</term>
+        <listitem>
+          <para>
+            Comparation returns 1 if there are some packages missing (c).
+          </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry><term>-c --comment  &lt;"example comment"&gt;</term>
+        <listitem>
+          <para>
+            Stores comment to dump (s,d,c).
+          </para>
+        </listitem>
+      </varlistentry>
+
+    </variablelist>
+  </refsect1>
+
+
+  <refsect1><title>SEE ALSO</title>
+    <para>
+      pkgcheck(1).
+      <ulink url="http://safrm.net/projects/xmlenv"/>
+    </para>
+  </refsect1>
+
+  <refsect1><title>AUTHOR</title>
+    Miroslav Šafr &lt;miroslav.safr@gmail.com&gt;
+  </refsect1>
+  <refsect1><title>LICENSE</title>
+   LGPL2
+  </refsect1>
+</refentry>
