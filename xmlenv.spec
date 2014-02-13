@@ -29,7 +29,7 @@ cd doc && ./update_docs.sh %{version} && cd -
 rm -fr %{buildroot}
 mkdir -p %{buildroot}%{_bindir}
 mkdir -p %{buildroot}%{_datadir}/xmlenv
-install -m 755 ./xmlenv %{buildroot}/usr/bin/
+install -m 755 ./xmlenv %{buildroot}%{_bindir}
 sed -i".bkp" "1,/^VERSION=/s/^VERSION=.*/VERSION=%{version}/" %{buildroot}%{_bindir}/xmlenv && rm -f %{buildroot}%{_bindir}/xmlenv.bkp
 sed -i".bkp" "1,/^VERSION_DATE=/s/^VERSION_DATE=.*/VERSION_DATE=%{APP_BUILD_DATE}/" %{buildroot}%{_bindir}/xmlenv && rm -f %{buildroot}%{_bindir}/xmlenv.bkp
 install -m 755 ./compare-pkgs.xsl %{buildroot}%{_datadir}/xmlenv/
@@ -40,6 +40,7 @@ install -m 644 ./doc/manpages/xmlenv.1* %{buildroot}%{_mandir}/man1/
 mkdir -p %{buildroot}%{_docdir}/xmlenv
 install -m 644 ./README %{buildroot}%{_docdir}/xmlenv/
 install -m 644 ./LICENSE.LGPL %{buildroot}%{_docdir}/xmlenv/
+sed -i".bkp" "1,/Version: /s/Version:   */Version:   %{version} %{APP_BUILD_DATE}/"  %{buildroot}%{_docdir}/xmlenv/README && rm -f %{buildroot}%{_docdir}/xmlenv/README.bkp
 
 %check
 for TEST in $(  grep -r -l -h "#\!/bin/sh" . )
@@ -58,5 +59,6 @@ done
 %{_datadir}/xmlenv/compare-pkgs.xsl
 
 %{_mandir}/man1/xmlenv.1*
+%dir %{_docdir}/xmlenv
 %{_docdir}/xmlenv/README
 %{_docdir}/xmlenv/LICENSE.LGPL
