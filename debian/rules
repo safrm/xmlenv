@@ -1,4 +1,5 @@
 #!/usr/bin/make -f
+include /usr/share/dpkg/pkg-info.mk
 DEB_VERBOSE_ALL=yes
 export DH_VERBOSE=1
 
@@ -6,7 +7,6 @@ export DH_VERBOSE=1
 	dh  $@
 
 override_dh_auto_build:
-	DEBVERSION=$(dpkg-parsechangelog | sed -n -e 's/^Version: //p' 2>/dev/null)
-	cd doc && ./update_docs.sh $DEBVERSION && cd -
-	dh_auto_build	
-	
+	jss-docs-update ./doc -sv $(DEB_VERSION_UPSTREAM)
+	dh_auto_build
+

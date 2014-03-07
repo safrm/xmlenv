@@ -4,7 +4,7 @@ Name:       xmlenv
 Summary:    multiplatformal/distribution system dumping and comparation
 Version:    1.0.0
 Release:    1
-Group:      System/Libraries
+Group:      Development/Tools
 License:    LGPL v2.1
 BuildArch:  noarch
 URL:        http://safrm.net/projects/xmlenv
@@ -12,9 +12,8 @@ Vendor:     Miroslav Safr <miroslav.safr@gmail.com>
 Source0:    %{name}-%{version}.tar.bz2
 Autoreq: on
 Autoreqprov: on
-BuildRequires:  libxslt
-BuildRequires: docbook-xsl-stylesheets
 BuildRequires:  appver >= 1.1.1
+BuildRequires: jenkins-support-scripts >= 1.2.3
 
 %description
 multiplatformal/distribution system dumping and comparation
@@ -23,7 +22,7 @@ multiplatformal/distribution system dumping and comparation
 %setup -c -n ./%{name}-%{version}
 
 %build
-cd doc && ./update_docs.sh %{version} && cd -
+jss-docs-update ./doc -sv %{version} 
 
 %install
 rm -fr %{buildroot}
@@ -37,15 +36,12 @@ sed -i".bkp" "1,/Version: /s/Version:   */Version:   %{version} %{APP_BUILD_DATE
 
 mkdir -p %{buildroot}%{_mandir}/man1
 install -m 644 ./doc/manpages/xmlenv.1* %{buildroot}%{_mandir}/man1/
-mkdir -p %{buildroot}%{_docdir}/xmlenv
-install -m 644 ./README %{buildroot}%{_docdir}/xmlenv/
-install -m 644 ./LICENSE.LGPL %{buildroot}%{_docdir}/xmlenv/
-sed -i".bkp" "1,/Version: /s/Version:   */Version:   %{version} %{APP_BUILD_DATE}/"  %{buildroot}%{_docdir}/xmlenv/README && rm -f %{buildroot}%{_docdir}/xmlenv/README.bkp
+
 
 %check
 for TEST in $(  grep -r -l -h "#\!/bin/sh" . )
 do
-		sh -n $TEST
+		sh -n "$TEST"
 		if  [ $? != 0 ]; then
 			echo "syntax error in $TEST, exiting.." 
 			exit 1
@@ -59,6 +55,4 @@ done
 %{_datadir}/xmlenv/compare-pkgs.xsl
 
 %{_mandir}/man1/xmlenv.1*
-%dir %{_docdir}/xmlenv
-%{_docdir}/xmlenv/README
-%{_docdir}/xmlenv/LICENSE.LGPL
+

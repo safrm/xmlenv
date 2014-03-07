@@ -2,13 +2,14 @@ Source: xmlenv
 Section: libs
 Priority: optional
 Maintainer: Miroslav Safr <miroslav.safr@gmail.com>
-Build-Depends: debhelper (>= 5), appver, xsltproc, docbook-xsl
-Suggest: appver
-Standards-Version: 1.0.0
+Build-Depends: debhelper (>= 5), appver, jenkins-support-scripts (>=1.2.3)
+Standards-Version: 3.8.1
+Homepage: http://safrm.net/projects/xmlenv
 
 Package: xmlenv
 Architecture: all
-Depends: dpkg, apt, xsltproc, ${misc:Depends}, ${launcher:Depends}, ${shlibs:Depends}
-Description: Multiplatformal/distribution system dumping and comparation using XML
+Depends: apt, xsltproc, ${misc:Depends}, ${launcher:Depends}, ${shlibs:Depends}
+Description: Multiplatformal/distribution system dumping and \
+	comparation using XML files
 
 
