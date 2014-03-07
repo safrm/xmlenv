@@ -13,7 +13,7 @@ Source0:    %{name}-%{version}.tar.bz2
 Autoreq: on
 Autoreqprov: on
 BuildRequires:  appver >= 1.1.1
-BuildRequires: jenkins-support-scripts >= 1.2.3
+BuildRequires: jenkins-support-scripts >= 1.2.4
 
 %description
 multiplatformal/distribution system dumping and comparation
