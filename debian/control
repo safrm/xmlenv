@@ -1,5 +1,5 @@
 Source: xmlenv
-Section: libs
+Section: utils
 Priority: optional
 Maintainer: Miroslav Safr <miroslav.safr@gmail.com>
 Build-Depends: debhelper (>= 5), appver, jenkins-support-scripts (>=1.2.3)
