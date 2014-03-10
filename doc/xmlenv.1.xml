@@ -28,12 +28,12 @@
 	<cmdsynopsis>
         <command>xmlenv COMMANDS [GROUPS] ... [OPTIONS]</command>
 		<arg choice="opt">--version</arg>
-    	<arg choice="opt">-f --full</arg>
+        	<arg choice="opt">-f --full</arg>
 		<arg choice="opt">-o --output &lt;html-file&gt;</arg>
 		<arg choice="opt">-b --base &lt;xml-file&gt;</arg>
-	    <arg choice="opt">-v --verbose</arg>
-  	    <arg choice="opt">-ec --exitcode</arg>
-   		<arg choice="opt">-c --comment  &lt;"example comment"&gt;</arg>
+		<arg choice="opt">-v --verbose</arg>
+  	    	<arg choice="opt">-ec --exitcode</arg>
+   		<arg choice="opt">-c --comment  &lt;example comment&gt;</arg>
     </cmdsynopsis>
 </refsynopsisdiv>
 

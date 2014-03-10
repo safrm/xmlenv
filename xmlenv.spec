@@ -31,7 +31,7 @@ mkdir -p %{buildroot}%{_datadir}/xmlenv
 install -m 755 ./xmlenv %{buildroot}%{_bindir}
 sed -i".bkp" "1,/^VERSION=/s/^VERSION=.*/VERSION=%{version}/" %{buildroot}%{_bindir}/xmlenv && rm -f %{buildroot}%{_bindir}/xmlenv.bkp
 sed -i".bkp" "1,/^VERSION_DATE=/s/^VERSION_DATE=.*/VERSION_DATE=%{APP_BUILD_DATE}/" %{buildroot}%{_bindir}/xmlenv && rm -f %{buildroot}%{_bindir}/xmlenv.bkp
-install -m 755 ./compare-pkgs.xsl %{buildroot}%{_datadir}/xmlenv/
+install -m 644 ./compare-pkgs.xsl %{buildroot}%{_datadir}/xmlenv/
 sed -i".bkp" "1,/Version: /s/Version:   */Version:   %{version} %{APP_BUILD_DATE}/"  %{buildroot}%{_datadir}/xmlenv/compare-pkgs.xsl && rm -f %{buildroot}%{_datadir}/xmlenv/compare-pkgs.xsl.bkp
 
 mkdir -p %{buildroot}%{_mandir}/man1
