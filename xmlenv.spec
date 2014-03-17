@@ -37,6 +37,8 @@ sed -i".bkp" "1,/Version: /s/Version:   */Version:   %{version} %{APP_BUILD_DATE
 mkdir -p %{buildroot}%{_mandir}/man1
 install -m 644 ./doc/manpages/xmlenv.1* %{buildroot}%{_mandir}/man1/
 
+%clean
+rm -fr %{buildroot}
 
 %check
 for TEST in $(  grep -r -l -h "#\!/bin/sh" . )
