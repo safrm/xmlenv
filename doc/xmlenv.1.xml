@@ -137,6 +137,34 @@
     </variablelist>
   </refsect1>
 
+  <refsect1>
+    <title>EXAMPLES</title>
+	<screen><![CDATA[
+example1: generate default (short) comparation report:
+xmlenv compare -b example/base.xml -o example/result-short.html 
+
+example2: generate full comparation report:
+xmlenv compare -v -b example/base.xml -o example/result-full.html --full
+-v .............. script verbose output
+-b <xml-file> ... dumped base xml file which we compare to
+-o <html-file> .. save report to somewhere else
+--full .......... show in report 1.equal and 2.current unique(additional) packages
+
+example3: dump with comment
+xmlenv dump -c "before installing dev env"
+
+
+example4: check installed packages
+./xmlenv check pkglist gcc,gdb  .. returns 0
+./xmlenv check pkglist gcc,gdb,not-existing .. returns 1
+
+
+example5: remote backup dumping
+ssh user@host 'bash /dev/stdin backup' < /usr/bin/xmlenv
+scp -r user@host:.xmlenv .
+]]>
+	</screen>
+  	</refsect1>
 
   <refsect1><title>SEE ALSO</title>
     <para>
