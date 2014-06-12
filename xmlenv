@@ -12,9 +12,9 @@ usage() {
     echo " http://safrm.net/projects/xmlenv/"
     echo "Usage:$BASENAME COMMANDS [GROUPS] ... [OPTIONS] "
     echo " COMMANDS: "
-    echo "   help ............................ prints this help"
-    echo "   --version ....................... prints only version number"
-    echo "   show ............................ shows requested info (s)"
+    echo "   help, -h, --help .................. prints this help"
+    echo "   -V, --version ..................... prints only version number"
+    echo "   show .............................. shows requested info (s)"
     echo "   dump .............................. dumps requsted info (d)"
     echo "   backup ............................ dumps state with timestamp format"
     echo "   compare <local or http base.xml> .. compares requested info (c)"
@@ -29,12 +29,12 @@ usage() {
     echo "               pkgdescr  packages with description (d)"
     echo "       *       pkgcount  number of installed packages (s)"
     echo " OPTIONS:"
-    echo "               -f --full  generates report with equal and current unique (additional) packages (c)"
-    echo "               -o --output <html-file> writes output to different file (c)"
-    echo "               -b --base <xml-file> selects base comparation file (c)"
-    echo "               -v --verbose  gets more output (s,d,c)"
-    echo "               -ec --exitcode  comparation returns 1 if there are some packages missing (c)"
-    echo "               -c --comment \"example comment\" stores comment to dump (s,d,c)"
+    echo "               -f,  --full  generates report with equal and current unique (additional) packages (c)"
+    echo "               -o,  --output <html-file> writes output to different file (c)"
+    echo "               -b,  --base <xml-file> selects base comparation file (c)"
+    echo "               -v,  --verbose  gets more output (s,d,c)"
+    echo "               -ec, --exitcode  comparation returns 1 if there are some packages missing (c)"
+    echo "               -c,  --comment \"example comment\" stores comment to dump (s,d,c)"
 #    echo "               pkgver gcc>=3.0  manual comparation for one version (c)"
 #    echo "               env:HOME=/home/user  environment variables equal query  (c)"
 #    echo "               env:HOME*/home/user  environment variables contains query (c)"
@@ -119,31 +119,35 @@ fi
 #header - preffered method ----------------------------------------------------
 DPKGEXEC=`which dpkg 2>/dev/null`
 if [ "x$DPKGEXEC" != "x"  ]; then
-        MANAGERS=$MANAGERS"dpkg:OK "
+        MANAGERS="$MANAGERSdpkg:OK "
         PREFFERED_MANAGER="dpkg"
 else
-        MANAGERS=$MANAGERS"dpkg:failed "
+        MANAGERS="$MANAGERS dpkg:failed "
 fi
 APTITUDEEXEC=`which aptitude 2>/dev/null`
 if [ "x$APTITUDEEXEC" != "x"  ]; then
-        MANAGERS=$MANAGERS"aptitude:OK "
+        MANAGERS="$MANAGERSaptitude:OK "
         PREFFERED_MANAGER="aptitude"
 else
-        MANAGERS=$MANAGERS"aptitude:failed "
+        MANAGERS="$MANAGERS aptitude:failed "
 fi
 YUMEXEC=`which yum 2>/dev/null`
 if [ "x$YUMEXEC" != "x"  ]; then
-        MANAGERS=$MANAGERS"yum:OK "
-        PREFFERED_MANAGER="yum"
+        MANAGERS="$MANAGERSyum:OK "
+		if echo $SYSTEMNAME | grep -q -i -e "\(ubuntu\|debian\).*" ; then 
+			log "Don't use yum on deb based distros" 
+		else 
+			PREFFERED_MANAGER="yum" 
+		fi
 else
-        MANAGERS=$MANAGERS"yum:failed "
+        MANAGERS="$MANAGERS yum:failed "
 fi
 
 if [ "x$PREFFERED_MANAGER" = "x" ]; then
 	echo "not found supported package manager"
-        exit 1
+    exit 1
 fi
-MANAGERS=$MANAGERS"preffered=$PREFFERED_MANAGER"
+MANAGERS="$MANAGERS preffered=$PREFFERED_MANAGER"
 
 if [ $cmd_show = 1 -a $group_sysinfo = 1 ]; then
         echo "type=$OSTYPE"
@@ -152,7 +156,7 @@ if [ $cmd_show = 1 -a $group_sysinfo = 1 ]; then
         echo "info=$OSINFO"
         echo "hostname=$HOSTNAME"
         echo "username=$USERNAME"
-	echo $MANAGERS
+        echo "MANAGERS=$MANAGERS"
         echo "commnet=$COMMENT_FIELD"
 fi
 }
@@ -400,7 +404,7 @@ while [ "$1" != "" ]; do
                                 COMMENT_FIELD=$1;;
         help  | -h | --help )   usage exit ;;
         -v    | --verbose )     _V=1 ;;
-        --version)    echo "`basename $0` $VERSION ${VERSION_DATE}" exit 0 ;;  
+        -V    | --version)    echo "`basename $0` $VERSION ${VERSION_DATE}" exit 0 ;;  
         * )                     DATA_LIST=`echo $1 | tr "," "\n"`;;
 
     esac
@@ -416,6 +420,7 @@ if [ "$group_pkglist" = "0" -a "$group_pkgver" = "0" -a "$group_sysinfo" = "0" -
 	group_pkgcount=1
 fi
 log "show=$cmd_show dump=$cmd_dump backup=$cmd_backup compare=$cmd_compare check=$cmd_check"
+log "pkglist=$group_pkglist pkgver=$group_pkgver envvar=$group_envvar pkgcount=$group_pkgcount desc=$group_descr"
 if [ $cmd_show = 1 -o $cmd_dump = 1 -o $cmd_backup = 1 ]; then
 	log "running show, dump or backup";
 	if [ $cmd_backup = 1 ]; then
