@@ -1,0 +1,34 @@
+# xmlenv completion                                        -*- shell-script -*-
+
+_xmlenv ()
+{
+    local cur prev words cword
+    _init_completion || return
+
+    if [[ "$cur" == -* ]]; then
+        COMPREPLY=( $( compgen -W '-h -f -o -b -v -ec -c
+            --help --full --output --base --verbose -- exitcode --comment' -- "$cur" ) )
+    else
+        case "$prev" in
+           show|check) 
+               COMPREPLY=( $( compgen -W "all pkglist pkgver env sys pkgcount" -- $cur ) ) 
+               ;;
+           dump|backup) 
+               COMPREPLY=( $( compgen -W "all pkglist pkgver env sys pkgdescr" -- $cur ) ) 
+               ;;
+           compare) 
+               COMPREPLY=( $( compgen -W "-f -o -b -ec --full --output --base --exitcode " -- $cur ) ) 
+               ;;
+           #no command given yet
+           *)
+               COMPREPLY=( $( compgen -W 'help show dump backup compare check' -- "$cur" ) )
+               return 0
+               ;;
+        esac
+        
+    fi
+
+} &&
+complete -F _xmlenv xmlenv
+
+# ex: ts=4 sw=4 et filetype=sh

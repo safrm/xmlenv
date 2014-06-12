@@ -1,3 +1,4 @@
 xmlenv /usr/bin/
 compare-pkgs.xsl /usr/share/xmlenv/
+xmlenv_completion /etc/bash_completion.d/
 doc/manpages/xmlenv.1  /usr/share/man/man1

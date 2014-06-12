@@ -34,6 +34,9 @@ sed -i".bkp" "1,/^VERSION_DATE=/s/^VERSION_DATE=.*/VERSION_DATE=%{APP_BUILD_DATE
 install -m 644 ./compare-pkgs.xsl %{buildroot}%{_datadir}/xmlenv/
 sed -i".bkp" "1,/Version: /s/Version:   */Version:   %{version} %{APP_BUILD_DATE}/"  %{buildroot}%{_datadir}/xmlenv/compare-pkgs.xsl && rm -f %{buildroot}%{_datadir}/xmlenv/compare-pkgs.xsl.bkp
 
+mkdir -p -m 0755 %{buildroot}%{_sysconfdir}/bash_completion.d
+install -m 0777 -v ./xmlenv_completion %{buildroot}%{_sysconfdir}/bash_completion.d
+
 mkdir -p %{buildroot}%{_mandir}/man1
 install -m 644 ./doc/manpages/xmlenv.1* %{buildroot}%{_mandir}/man1/
 
@@ -55,6 +58,8 @@ done
 %{_bindir}/xmlenv
 %dir %{_datadir}/xmlenv
 %{_datadir}/xmlenv/compare-pkgs.xsl
+
+%{_sysconfdir}/bash_completion.d/xmlenv_completion
 
 %{_mandir}/man1/xmlenv.1*
 
