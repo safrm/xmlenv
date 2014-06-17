@@ -10,8 +10,11 @@ _xmlenv ()
             --help --full --output --base --verbose -- exitcode --comment' -- "$cur" ) )
     else
         case "$prev" in
-           show|check) 
+           show) 
                COMPREPLY=( $( compgen -W "all pkglist pkgver env hw sys pkgcount" -- $cur ) ) 
+               ;;
+           check) 
+               COMPREPLY=( $( compgen -W "pkglist pkgver env" -- $cur ) ) 
                ;;
            dump|backup) 
                COMPREPLY=( $( compgen -W "all pkglist pkgver env hw sys pkgdescr" -- $cur ) ) 
