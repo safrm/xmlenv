@@ -213,11 +213,11 @@ fi
 #envvars ------------------------------------------------------------------------------
 if [ $group_envvar = 1 ]; then
 	if [ $cmd_show = 1 ]; then
-		env | tr -d \"\'\|\%\\  | sort -V -s -u |  awk -F= ' { print $1 "=" $2 }'
+		env | tr -d \"\'\|\%\\\\  | sort -V -s -u |  awk -F= ' { print $1 "=" $2 }'
 	fi
 	if [ $cmd_dump = 1 -o  $cmd_backup = 1 ]; then
 		echo "<envvars>" >> $XML_VERSIONS_FILE
-		env | tr -d \"\'\|\%\\  | sort -V -s -u | awk -F= ' { print "  <envvar name=\""$1"\" value=\""$2"\" />" }' >>  $XML_VERSIONS_FILE
+		env | tr -d \"\'\|\%\\\\  | sort -V -s -u | awk -F= ' { print "  <envvar name=\""$1"\" value=\""$2"\" />" }' >>  $XML_VERSIONS_FILE
 		echo "</envvars>" >> $XML_VERSIONS_FILE
 	fi
 fi
