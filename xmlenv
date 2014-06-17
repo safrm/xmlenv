@@ -21,13 +21,14 @@ usage() {
     echo "   check ............................. check if packages are installed"
     echo " GROUPS: all or empty = default"
     echo "    default"
-    echo "               pkglist  installed  package list (s,d)"
-    echo "       *       pkgver  installed package versions (s,d)"
-    echo "               pkgver gcc   package versions of one package (s,d)"
-    echo "       *       env  environment variables according file (s,d)"
-    echo "       *       sys   system info (s,d)"
-    echo "               pkgdescr  packages with description (d)"
-    echo "       *       pkgcount  number of installed packages (s)"
+    echo "               pkglist ...... installed  package list (s,d)"
+    echo "       *       pkgver ....... installed package versions (s,d)"
+    echo "               pkgver gcc ... package versions of one package (s,d)"
+    echo "       *       env .......... environment variables according file (s,d)"
+    echo "       *       hw ........... HW info (s,d)"
+    echo "       *       sys .......... system info (s,d)"
+    echo "               pkgdescr ..... packages with description (d)"
+    echo "       *       pkgcount ..... number of installed packages (s)"
     echo " OPTIONS:"
     echo "               -f,  --full  generates report with equal and current unique (additional) packages (c)"
     echo "               -o,  --output <html-file> writes output to different file (c)"
@@ -63,7 +64,7 @@ if [ "x$OSTYPE" = "x" ]
 then
     echo "No system name and type detected (uname)"
 else
-XML_HEADER="$XML_HEADER type=\"$OSTYPE\" "
+	XML_HEADER="$XML_HEADER type=\"$OSTYPE\" "
 fi
 
 #header - system name --------------------------------------------------- 
@@ -75,7 +76,7 @@ if [ "x$SYSTEMNAME" = "x" ]
 then
     echo "No system name detected (lsb_release)"
 else
-XML_HEADER="$XML_HEADER systemname=\"$SYSTEMNAME\" "
+	XML_HEADER="$XML_HEADER systemname=\"$SYSTEMNAME\" "
 fi
 
 #header - os info + arch separately --------------------------------------
@@ -101,7 +102,7 @@ if [ "x$HOSTNAME" = "x" ]
 then
     echo "No system name detected (hostname)"
 else
-XML_HEADER="$XML_HEADER hostname=\"$HOSTNAME\""
+	XML_HEADER="$XML_HEADER hostname=\"$HOSTNAME\""
 fi
 
 #header - username ----------------------------------------------------
@@ -113,7 +114,7 @@ if [ "x$USERNAME" = "x" ]
 then
     echo "No username detected (whoami)"
 else
-XML_HEADER="$XML_HEADER username=\"$USERNAME\""
+	XML_HEADER="$XML_HEADER username=\"$USERNAME\""
 fi
 
 #header - preffered method ----------------------------------------------------
@@ -167,17 +168,56 @@ if [ $cmd_dump = 1 -o  $cmd_backup = 1 ]; then
 	echo $XML_HEADER_START > $XML_VERSIONS_FILE
 	echo $XML_HEADER >> $XML_VERSIONS_FILE
 fi
-	if [ $group_envvar = 1 ]; then
 
-			if [ $cmd_show = 1 ]; then
-				env | tr -d \"\'\|\%\\  | sort -V -s -u |  awk -F= ' { print $1 "=" $2 }'
-			fi
-			if [ $cmd_dump = 1 -o  $cmd_backup = 1 ]; then
-				echo "<envvars>" >> $XML_VERSIONS_FILE
-				env | tr -d \"\'\|\%\\  | sort -V -s -u | awk -F= ' { print "  <envvar name=\""$1"\" value=\""$2"\" />" }' >>  $XML_VERSIONS_FILE
-				echo "</envvars>" >> $XML_VERSIONS_FILE
-			fi
+#HW INFO ------------------------------------------------------------------------------
+if [ "$group_hwinfo" = "1" ]; then
+	CPU_NAME=`cat /proc/cpuinfo | grep "model name" -m 1  | awk -F ': ' '{print $2}'`
+	CPU_ARCH=`lscpu | grep "Architecture". | awk -F' '  '{print $2}'`
+	CPU_CORES=` cat /proc/cpuinfo | grep 'core id' 2> /dev/null | wc -l`
+  	CPU_VT_FLAGS=` cat /proc/cpuinfo |grep -Eho -m 1 -i "svm|vmx"`
+	MEMORY_TOTAL=`free -m | grep "Mem:" |  awk -F' '  '{print $2}'`
+	SWAP_TOTAL=`free -m | grep "Swap:" |  awk -F' '  '{print $2}'`
+	DISK_ROOT_INFO=`df / -BG -T | tail -1`
+	DISK_ROOT_TOTAL=`echo $DISK_ROOT_INFO | awk ' {print $3}'`
+	DISK_ROOT_FREE=`echo $DISK_ROOT_INFO | awk ' {print $5}'`
+	DISK_ROOT_TYPE=`echo $DISK_ROOT_INFO | awk ' {print $2}'`
+	DISK_HOME_INFO=`df ~ -BG -T | tail -1`
+	DISK_HOME_TOTAL=`echo $DISK_HOME_INFO | awk ' {print $3}'`
+	DISK_HOME_FREE=`echo $DISK_HOME_INFO | awk ' {print $5}'`
+	DISK_HOME_TYPE=`echo $DISK_HOME_INFO | awk ' {print $2}'`
+
+	if [ $cmd_show = 1 ]; then
+		echo "cpu-name=$CPU_NAME"
+		echo "cpu-arch=$CPU_ARCH"
+		echo "cpu-cores=$CPU_CORES"
+		echo "cpu-vt-flags=$CPU_VT_FLAGS"
+		echo "memory-total=$MEMORY_TOTAL"
+		echo "swap-total=$SWAP_TOTAL"
+		echo "disk-root: total=$DISK_ROOT_TOTAL free=$DISK_ROOT_FREE type=$DISK_ROOT_TYPE"
+		echo "disk-home: total=$DISK_HOME_TOTAL free=$DISK_HOME_FREE type=$DISK_HOME_TYPE"
 	fi
+	if [ $cmd_dump = 1 -o  $cmd_backup = 1 ]; then
+		echo "<hw>" >> $XML_VERSIONS_FILE
+		echo "  <cpu name=\"$CPU_NAME\" arch=\"$CPU_ARCH\" cores=\"$CPU_CORES\" vt-flags=\"$CPU_VT_FLAGS\" />" >>  $XML_VERSIONS_FILE
+		echo "  <memory total=\"$MEMORY_TOTAL\" />" >>  $XML_VERSIONS_FILE
+		echo "  <swap total=\"$SWAP_TOTAL\" />" >>  $XML_VERSIONS_FILE
+		echo "  <disk-root total=\"$DISK_ROOT_TOTAL\" free=\"$DISK_ROOT_FREE\" type=\"$DISK_ROOT_TYPE\" />" >>  $XML_VERSIONS_FILE
+		echo "  <disk-home total=\"$DISK_HOME_TOTAL\" free=\"$DISK_HOME_FREE\" type=\"$DISK_ROOT_TYPE\" />" >>  $XML_VERSIONS_FILE
+		echo "</hw>" >> $XML_VERSIONS_FILE
+	fi
+fi
+
+#envvars ------------------------------------------------------------------------------
+if [ $group_envvar = 1 ]; then
+	if [ $cmd_show = 1 ]; then
+		env | tr -d \"\'\|\%\\  | sort -V -s -u |  awk -F= ' { print $1 "=" $2 }'
+	fi
+	if [ $cmd_dump = 1 -o  $cmd_backup = 1 ]; then
+		echo "<envvars>" >> $XML_VERSIONS_FILE
+		env | tr -d \"\'\|\%\\  | sort -V -s -u | awk -F= ' { print "  <envvar name=\""$1"\" value=\""$2"\" />" }' >>  $XML_VERSIONS_FILE
+		echo "</envvars>" >> $XML_VERSIONS_FILE
+	fi
+fi
 
 #packages ------------------------------------------------------------------------------
 if [ "x$PREFFERED_MANAGER" = "xaptitude" ]; then
@@ -364,6 +404,7 @@ cmd_compare=0
 cmd_check=0
 group_pkglist=0
 group_pkgver=0
+group_hwinfo=0
 group_sysinfo=0
 group_descr=0
 group_envvar=0
@@ -380,11 +421,13 @@ while [ "$1" != "" ]; do
         check )                 cmd_check=1 ;;
         all )                   group_pkglist=1
                 				group_pkgver=1
+								group_hwinfo=1
 		                        group_sysinfo=1
                 				group_envvar=1 ;;
         list | pkglist )        group_pkglist=1 ;;
         versions | pkgver )     group_pkgver=1 ;;
-        sysinfo | system | sys )         group_sysinfo=1 ;;
+        sysinfo | system | sys ) group_sysinfo=1 ;;
+        hwinfo | hw )           group_hwinfo=1 ;;
         descr | pkgdescr | descriptions )  group_descr=1 ;;   #scpecial usage
         env   | envvar )        group_envvar=1 ;;
         count | pkgcount )      group_pkgcount=1 ;;
@@ -412,9 +455,10 @@ while [ "$1" != "" ]; do
 done
 #cmd_run=$(($cmd_show+$cmd_dump))
 #xmlver show (means all)
-if [ "$group_pkglist" = "0" -a "$group_pkgver" = "0" -a "$group_sysinfo" = "0" -a "$group_descr" = "0"  -a "$group_envvar" = "0" -a "$group_pkgcount" = "0"  ]; then
+if [ "$group_pkglist" = "0" -a "$group_pkgver" = "0" -a "$group_hwinfo" = "0" -a "$group_sysinfo" = "0" -a "$group_descr" = "0"  -a "$group_envvar" = "0" -a "$group_pkgcount" = "0"  ]; then
 	group_pkglist=1
 	group_pkgver=1
+	group_hwinfo=1
 	group_sysinfo=1
     group_envvar=1
 	group_pkgcount=1
@@ -430,12 +474,13 @@ if [ $cmd_show = 1 -o $cmd_dump = 1 -o $cmd_backup = 1 ]; then
         echo "backup will be stored in:$XML_VERSIONS_FILE"
     fi
 	Init
-	if [ $group_pkglist = 1 -o $group_pkgver = 1 -o $group_envvar = 1 -o $group_pkgcount = 1 -o $group_descr = 1 ]; then
+	if [ $group_pkglist = 1 -o $group_pkgver = 1 -o $group_hwinfo = 1 -o $group_envvar = 1 -o $group_pkgcount = 1 -o $group_descr = 1 ]; then
 		PackagesRequests
 	fi
 elif [ $cmd_compare = 1  ]; then 
     #simple compare(base.xml) or dump+compare?
     log "running compare";
+	#TODO - hwinfo comparations?
     cmd_dump=1 ; group_pkgver=1 ; group_sysinfo=1 ;
     Init
     PackagesRequests

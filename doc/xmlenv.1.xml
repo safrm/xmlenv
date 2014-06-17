@@ -69,6 +69,7 @@
          *       pkgver  installed package versions (s,d)
                  pkgver gcc   package versions of one package (s,d)
          *       env  environment variables according file (s,d)
+         *       hw HW info (s,d)
          *       sys   system info (s,d)
                  pkgdescr  packages with description (d)
          *       pkgcount  number of installed packages (s)
