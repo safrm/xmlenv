@@ -12,16 +12,16 @@ usage() {
     echo " http://safrm.net/projects/xmlenv/"
     echo "Usage:$BASENAME COMMANDS [GROUPS] ... [OPTIONS] "
     echo " COMMANDS: "
-    echo "   help, -h, --help .................. prints this help"
-    echo "   -V, --version ..................... prints only version number"
-    echo "   show .............................. shows requested info (s)"
-    echo "   dump .............................. dumps requsted info (d)"
-    echo "   backup ............................ dumps state with timestamp format"
-    echo "   compare <local or http base.xml> .. compares requested info (c)"
-    echo "   check ............................. check if packages are installed"
+    echo "   help, -h, --help ................ prints this help"
+    echo "   -V, --version ................... prints only version number"
+    echo "   show ............................ shows requested info (s)"
+    echo "   dump ............................ dumps requsted info (d)"
+    echo "   backup .......................... dumps state with timestamp format"
+    echo "   compare <local or http base.xml>  compares requested info (c)"
+    echo "   check ........................... checks system parameters given by commandline comma separated array (ch)"
     echo " GROUPS: all or empty = default"
     echo "    default"
-    echo "               pkglist ...... installed  package list (s,d)"
+    echo "               pkglist ...... installed  package list (s,d,ch)"
     echo "       *       pkgver ....... installed package versions (s,d)"
     echo "               pkgver gcc ... package versions of one package (s,d)"
     echo "       *       env .......... environment variables according file (s,d)"
@@ -30,12 +30,15 @@ usage() {
     echo "               pkgdescr ..... packages with description (d)"
     echo "       *       pkgcount ..... number of installed packages (s)"
     echo " OPTIONS:"
-    echo "               -f,  --full  generates report with equal and current unique (additional) packages (c)"
-    echo "               -o,  --output <html-file> writes output to different file (c)"
-    echo "               -b,  --base <xml-file> selects base comparation file (c)"
-    echo "               -v,  --verbose  gets more output (s,d,c)"
-    echo "               -ec, --exitcode  comparation returns 1 if there are some packages missing (c)"
-    echo "               -c,  --comment \"example comment\" stores comment to dump (s,d,c)"
+    echo "  -f,  --full ......................... generates report with equal and current unique (additional) packages (c)"
+    echo "  -or, --output-report <html-file> .... writes output to different file (default report.html)  (c)"
+    echo "  -b,  --base <xml-file> .............. selects base comparation file (c)"
+    echo "  -ox, --output-xml <xml-file> ........ change main output xmlfile name (default pkgversions.xml) (s,d,c)"
+    echo "  -od, --output-descriptions <xml-file> change output xmlfile name fro pkgdescr (default pkgdescriptions.xml) (d)"
+    echo "  -dd, --dont-dump .................... used for comparing two dumps -b <first-xml> -ox <second-xml> (c)"
+    echo "  -v,  --verbose ...................... gets more output (s,d,c)"
+    echo "  -ec, --exitcode ..................... comparation returns 1 if there are some packages missing (c)"
+    echo "  -c,  --comment \"example comment\" .. stores comment to dump (s,d,c)"
 #    echo "               pkgver gcc>=3.0  manual comparation for one version (c)"
 #    echo "               env:HOME=/home/user  environment variables equal query  (c)"
 #    echo "               env:HOME*/home/user  environment variables contains query (c)"
@@ -385,17 +388,11 @@ fi
 }
 
 
-log() {
-    if [ $_V -eq 1 ]; then
-        echo "V: $@"
-    fi
-}
-
-
 interactive=
 base_xml=`pwd`/base.xml
 output_html=`pwd`/result.html
 full_html_report=false
+dont_dump=0
 exit_codes=false
 cmd_show=0
 cmd_dump=0
@@ -410,13 +407,14 @@ group_descr=0
 group_envvar=0
 group_pkgcount=0
 DATA_LIST=
-_V=0  				#verbose
+log(){ [ ${VERBOSE_FLAG:-0} -eq 0 ] || echo "V: $*"; }
+fail() { printf "\n\033[01;31mERROR: $*\033[00m\n" ; exit 1 ; }
 
 while [ "$1" != "" ]; do
     case $1 in
         show )                  cmd_show=1 ;;
         dump )                  cmd_dump=1 ;;
-        backup )                  cmd_backup=1 ;;
+        backup )                cmd_backup=1 ;;
         compare )               cmd_compare=1 ;;
         check )                 cmd_check=1 ;;
         all )                   group_pkglist=1
@@ -431,22 +429,23 @@ while [ "$1" != "" ]; do
         descr | pkgdescr | descriptions )  group_descr=1 ;;   #scpecial usage
         env   | envvar )        group_envvar=1 ;;
         count | pkgcount )      group_pkgcount=1 ;;
-        -b    | --base )        shift  
+        -b    | --base-xml )    shift  
                                 base_xml=`readlink -f $1`
-                                if [ ! -f $base_xml ]
-                                then
-                                    echo "Base file $base_xml does not exists" 
-                                    exit 1
-                                fi
+								[ -f $base_xml ] || fail "Base file $base_xml does not exists"
                                 ;;
-        -o    | --output )      shift  
-                                output_html=$1;;
+        -or    | --output-report )      shift  
+                                output_html=$1 ;;
+        -ox    | --output-xml )      shift  
+                                XML_VERSIONS_FILE=$1 ;;
+        -od    | --output-descriptions )      shift  
+                                XML_DESCRIPTIONS_FILE=$1 ;;
         -f    | --full )        full_html_report=true;;
+		-dd   | --dont-dump)	dont_dump=1 ;;
         -ec   | --exitcode )    exit_codes=true;;
         -c    | --comment )     shift  
                                 COMMENT_FIELD=$1;;
         help  | -h | --help )   usage exit ;;
-        -v    | --verbose )     _V=1 ;;
+        -v    | --verbose )     VERBOSE_FLAG=1 ;;
         -V    | --version)    echo "`basename $0` $VERSION ${VERSION_DATE}" exit 0 ;;  
         * )                     DATA_LIST=`echo $1 | tr "," "\n"`;;
 
@@ -482,9 +481,13 @@ elif [ $cmd_compare = 1  ]; then
     log "running compare";
 	#TODO - hwinfo comparations?
     cmd_dump=1 ; group_pkgver=1 ; group_sysinfo=1 ;
-    Init
-    PackagesRequests
-    saxon-xslt ./pkgversions.xml /usr/share/xmlenv/compare-pkgs.xsl  basefile=$base_xml fullreport=$full_html_report > $output_html
+	if [ $dont_dump = 1 ]; then
+		[ -f $XML_VERSIONS_FILE ] || fail "Input xml file $XML_VERSIONS_FILE does not exist"
+	else
+	    Init
+    	PackagesRequests
+	fi
+    saxon-xslt $XML_VERSIONS_FILE /usr/share/xmlenv/compare-pkgs.xsl basefile=$base_xml fullreport=$full_html_report > $output_html
     if [ "$?" != "0" ]; then
 	echo "problem in comparation - maybe libsaxon-java is not installed or you don't have permissions."
         exit 1

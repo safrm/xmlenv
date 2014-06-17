@@ -28,12 +28,15 @@
 <refsynopsisdiv>
 	<cmdsynopsis>
         <command>xmlenv COMMANDS [GROUPS] ... [OPTIONS]</command>
-		<arg choice="opt">--version</arg>
-        	<arg choice="opt">-f --full</arg>
-		<arg choice="opt">-o --output &lt;html-file&gt;</arg>
+		<arg choice="opt">-v --version</arg>
+      	<arg choice="opt">-f --full</arg>
+		<arg choice="opt">-or --output-report &lt;html-file&gt;</arg>
 		<arg choice="opt">-b --base &lt;xml-file&gt;</arg>
+		<arg choice="opt">-ox--output-xml &lt;xml-file&gt;</arg>
+		<arg choice="opt">-od --output-descriptions &lt;xml-file&gt;</arg>
+		<arg choice="opt">-dd, --dont-dump</arg>
 		<arg choice="opt">-v --verbose</arg>
-  	    	<arg choice="opt">-ec --exitcode</arg>
+    	<arg choice="opt">-ec --exitcode</arg>
    		<arg choice="opt">-c --comment  &lt;example comment&gt;</arg>
     </cmdsynopsis>
 </refsynopsisdiv>
@@ -52,8 +55,9 @@
           help .......... shows help 
           show .......... shows files in package (s)
           dump .......... creates pkgversions.xml (d)
+          backup ........ dumps state with timestamp format
           compare ....... creates pkgversions.xml dump and compares it with base.xml (c)
-          check ......... checks system parameters given by commandline comma separated array (b)
+          check ......... checks system parameters given by commandline comma separated array (ch)
         </screen>
     </para>
   </refsect1>
@@ -65,14 +69,14 @@
      all or empty = default
        default
      ----------------------------------------------------
-                 pkglist  installed  package list (s,d)
-         *       pkgver  installed package versions (s,d)
-                 pkgver gcc   package versions of one package (s,d)
-         *       env  environment variables according file (s,d)
-         *       hw HW info (s,d)
-         *       sys   system info (s,d)
-                 pkgdescr  packages with description (d)
-         *       pkgcount  number of installed packages (s)
+                 pkglist ...... installed  package list (s,d,ch)
+         *       pkgver ....... installed package versions (s,d)
+                 pkgver gcc ... package versions of one package (s,d)
+         *       env .......... environment variables according file (s,d)
+         *       hw ........... HW info (s,d)
+         *       sys .......... system info (s,d)
+                 pkgdescr ..... packages with description (d)
+         *       pkgcount ..... number of installed packages (s)
     </screen>
     </para>
   </refsect1>
@@ -97,10 +101,10 @@
         </listitem>
       </varlistentry>
       
-      <varlistentry><term>-o --output &lt;html-file&gt;</term>
+      <varlistentry><term>-or --output-report &lt;html-file&gt;</term>
         <listitem>
           <para>
-            Writes output to different file (c). (default is ./pkgversion.xml)
+            Writes output to different file (c). (default report.html) 
           </para>
         </listitem>
       </varlistentry>
@@ -113,6 +117,30 @@
         </listitem>
       </varlistentry>
 
+      <varlistentry><term>-ox --output-xml &lt;xml-file&gt;</term>
+        <listitem>
+          <para>
+            Changes main output xmlfile name (default pkgversions.xml) (s,d,c)
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry><term>-od --output-descriptions &lt;xml-file&gt;</term>
+        <listitem>
+          <para>
+            Changes output xmlfile name fro pkgdescr (default pkgdescriptions.xml) (d)
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry><term>-dd --dont-dump</term>
+        <listitem>
+          <para>
+            Used for comparing two dumps -b &lt;first-xml&gt; -ox &lt;second-xml&gt; (c)
+          </para>
+        </listitem>
+      </varlistentry>
+
       <varlistentry><term>-v --verbose</term>
         <listitem>
           <para>
@@ -120,6 +148,7 @@
           </para>
         </listitem>
       </varlistentry>
+
       <varlistentry><term>-ec --exitcode</term>
         <listitem>
           <para>
@@ -163,6 +192,9 @@ example4: check installed packages
 example5: remote backup dumping
 ssh user@host 'bash /dev/stdin backup' < /usr/bin/xmlenv
 scp -r user@host:.xmlenv .
+
+example6: external comparation
+./xmlenv compare -b ./first.xml -ox ./second.xml -dd -or ./my-report.html
 ]]>
 	</screen>
   	</refsect1>

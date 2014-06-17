@@ -6,8 +6,8 @@ _xmlenv ()
     _init_completion || return
 
     if [[ "$cur" == -* ]]; then
-        COMPREPLY=( $( compgen -W '-h -f -o -b -v -ec -c
-            --help --full --output --base --verbose -- exitcode --comment' -- "$cur" ) )
+        COMPREPLY=( $( compgen -W '-h -f -or -ox -od -b -v -dd -ec -c
+            --help --full --output-report --output-xml --output-descriptions --base --verbose --dont-dump --exitcode --comment' -- "$cur" ) )
     else
         case "$prev" in
            show) 
@@ -20,7 +20,7 @@ _xmlenv ()
                COMPREPLY=( $( compgen -W "all pkglist pkgver env hw sys pkgdescr" -- $cur ) ) 
                ;;
            compare) 
-               COMPREPLY=( $( compgen -W "-f -o -b -ec --full --output --base --exitcode " -- $cur ) ) 
+               COMPREPLY=( $( compgen -W "-f -or -ox -od -b -dd -ec --full --output-report --output-xml --output-descriptions --base --dont-dump --exitcode " -- $cur ) ) 
                ;;
            #no command given yet
            *)
@@ -32,6 +32,6 @@ _xmlenv ()
     fi
 
 } &&
-complete -F _xmlenv xmlenv
+complete -F _xmlenv -o dirnames -o filenames xmlenv 
 
 # ex: ts=4 sw=4 et filetype=sh
