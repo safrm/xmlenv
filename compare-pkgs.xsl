@@ -105,19 +105,24 @@
 				    <td width="4%"></td>
 				    <td width="23%"><xsl:value-of select="$docB/system/@hostname"/></td>
 			    </tr>
-                        <tr class="sysinfo"> 
+		 		<tr class="sysinfo"> 
         			<td width="40%"><xsl:text>pkgmanager</xsl:text></td>
 				    <td width="23%"><xsl:value-of select="$docA/system/@pkgmanager"/></td>
 				    <td width="4%"></td>
 				    <td width="23%"><xsl:value-of select="$docB/system/@pkgmanager"/></td>
-                 	</tr>
-
-                        <tr class="sysinfo"> 
+                </tr>
+		 		<tr class="sysinfo"> 
+        			<td width="40%"><xsl:text>xmlenv</xsl:text></td>
+				    <td width="23%"><xsl:value-of select="$docA/system/@xmlenv"/></td>
+				    <td width="4%"></td>
+				    <td width="23%"><xsl:value-of select="$docB/system/@xmlenv"/></td>
+                </tr>
+                <tr class="sysinfo"> 
         			<td width="40%"><xsl:text>info</xsl:text></td>
 				    <td width="23%"><xsl:value-of select="$docA/system/@info"/></td>
 				    <td width="4%"></td>
 				    <td width="23%"><xsl:value-of select="$docB/system/@info"/></td>
-                 	</tr>
+                </tr>
 
                 <xsl:call-template name="recurse">
                   <xsl:with-param name="nodesA"

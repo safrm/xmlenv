@@ -492,14 +492,14 @@ elif [ $cmd_compare = 1  ]; then
 	echo "problem in comparation - maybe libsaxon-java is not installed or you don't have permissions."
         exit 1
     else 
-	#0 = found not installed package
-	grep "not installed" -q $output_html  
-	if [ "$?" = "0" -a "$exit_codes" = "true" ]; then
-		echo "some packages are not installed check `readlink -f $output_html`"	
-	    	exit 1
-        else
-		echo "comparation result written to `readlink -f $output_html`"
-        fi
+		#0 = found not installed package
+		grep "not installed" -q $output_html  
+		if [ "$?" = "0" -a "$exit_codes" = "true" ]; then
+			echo "some packages are not installed check `readlink -f $output_html`"	
+			exit 1
+		else
+			echo "comparation result written to `readlink -f $output_html`"
+		fi
     fi
 elif [ $cmd_check = 1  ]; then 
 	log "running check";
@@ -509,6 +509,6 @@ elif [ $cmd_check = 1  ]; then
 	fi
 else
    	echo "wrong parameters";
-        usage
+    usage
 fi
 
