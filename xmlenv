@@ -391,7 +391,7 @@ fi
 
 
 interactive=
-base_xml=`pwd`/base.xml
+base_xml=
 output_html=`pwd`/result.html
 full_html_report=false
 dont_dump=0
@@ -494,6 +494,7 @@ elif [ $cmd_compare_report = 1 -o $cmd_compare_installed_pkgs = 1 -o $cmd_compar
     	PackagesRequests
 	fi
 	if [ $cmd_compare_report = 1 ]; then
+		[ -f $base_xml ] || fail "Base file $base_xml does not exists"
 	    saxon-xslt $XML_VERSIONS_FILE /usr/share/xmlenv/compare-pkgs.xsl basefile=$base_xml fullreport=$full_html_report > $output_html
 		if [ "$?" != "0" ]; then
 		echo "problem in comparation - maybe libsaxon-java is not installed or you don't have permissions."
@@ -510,8 +511,11 @@ elif [ $cmd_compare_report = 1 -o $cmd_compare_installed_pkgs = 1 -o $cmd_compar
 		fi
 	elif [ $cmd_compare_installed_pkgs = 1 ]; then
 		echo "Extra installed packages:"
-		saxon-xslt $XML_VERSIONS_FILE  /usr/share/xmlenv/pkglist-extra-installed.xsl basefile=$base_xml 
+		#empty base flag means to compare with empty document
+		[ -n "$base_xml" ] && BASE_FLAG="basefile=$base_xml"
+		saxon-xslt $XML_VERSIONS_FILE /usr/share/xmlenv/pkglist-extra-installed.xsl $BASE_FLAG
 	elif [ $cmd_compare_removed_pkgs = 1 ]; then
+		[ -f $base_xml ] || fail "Base file $base_xml does not exists"
 		echo "Removed packages:"
 		XML_VERSIONS_FILE=`readlink -f $XML_VERSIONS_FILE`
 		saxon-xslt $base_xml /usr/share/xmlenv/pkglist-extra-installed.xsl basefile=$XML_VERSIONS_FILE 
