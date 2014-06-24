@@ -17,9 +17,11 @@ usage() {
     echo "   show ............................ shows requested info (s)"
     echo "   dump ............................ dumps requsted info (d)"
     echo "   backup .......................... dumps state with timestamp format"
-    echo "   compare <local or http base.xml>  compares requested info (c)"
+    echo "   compare-report .................. compares 2 states/files and creates html report (c)"
+    echo "   compare-installed-pkgs .......... prints list of added packages from base state (c)"
+    echo "   compare-removed-pkgs ............ prints list of removed packages from base state (c)"
     echo "   check ........................... checks system parameters given by commandline comma separated array (ch)"
-    echo " GROUPS: all or empty = default"
+    echo " GROUPS(s,d,ch): all or empty = default"
     echo "    default"
     echo "               pkglist ...... installed  package list (s,d,ch)"
     echo "       *       pkgver ....... installed package versions (s,d)"
@@ -32,7 +34,7 @@ usage() {
     echo " OPTIONS:"
     echo "  -f,  --full ......................... generates report with equal and current unique (additional) packages (c)"
     echo "  -or, --output-report <html-file> .... writes output to different file (default report.html)  (c)"
-    echo "  -b,  --base <xml-file> .............. selects base comparation file (c)"
+    echo "  -b,  --base <xml-file> .............. selects base comparation file (local or http base.xml) (c)"
     echo "  -ox, --output-xml <xml-file> ........ change main output xmlfile name (default pkgversions.xml) (s,d,c)"
     echo "  -od, --output-descriptions <xml-file> change output xmlfile name fro pkgdescr (default pkgdescriptions.xml) (d)"
     echo "  -dd, --dont-dump .................... used for comparing two dumps -b <first-xml> -ox <second-xml> (c)"
@@ -397,7 +399,9 @@ exit_codes=false
 cmd_show=0
 cmd_dump=0
 cmd_backup=0
-cmd_compare=0
+cmd_compare_report=0
+cmd_compare_installed_pkgs=0 
+cmd_compare_removed_pkgs=0
 cmd_check=0
 group_pkglist=0
 group_pkgver=0
@@ -415,7 +419,9 @@ while [ "$1" != "" ]; do
         show )                  cmd_show=1 ;;
         dump )                  cmd_dump=1 ;;
         backup )                cmd_backup=1 ;;
-        compare )               cmd_compare=1 ;;
+        compare-report)         cmd_compare_report=1 ;;
+        compare-installed-pkgs) cmd_compare_installed_pkgs=1 ;;
+        compare-removed-pkgs)   cmd_compare_removed_pkgs=1 ;;
         check )                 cmd_check=1 ;;
         all )                   group_pkglist=1
                 				group_pkgver=1
@@ -462,7 +468,7 @@ if [ "$group_pkglist" = "0" -a "$group_pkgver" = "0" -a "$group_hwinfo" = "0" -a
     group_envvar=1
 	group_pkgcount=1
 fi
-log "show=$cmd_show dump=$cmd_dump backup=$cmd_backup compare=$cmd_compare check=$cmd_check"
+log "show=$cmd_show dump=$cmd_dump backup=$cmd_backup compare_report=$cmd_compare_report check=$cmd_check"
 log "pkglist=$group_pkglist pkgver=$group_pkgver envvar=$group_envvar pkgcount=$group_pkgcount desc=$group_descr"
 if [ $cmd_show = 1 -o $cmd_dump = 1 -o $cmd_backup = 1 ]; then
 	log "running show, dump or backup";
@@ -476,7 +482,7 @@ if [ $cmd_show = 1 -o $cmd_dump = 1 -o $cmd_backup = 1 ]; then
 	if [ $group_pkglist = 1 -o $group_pkgver = 1 -o $group_hwinfo = 1 -o $group_envvar = 1 -o $group_pkgcount = 1 -o $group_descr = 1 ]; then
 		PackagesRequests
 	fi
-elif [ $cmd_compare = 1  ]; then 
+elif [ $cmd_compare_report = 1 -o $cmd_compare_installed_pkgs = 1 -o $cmd_compare_removed_pkgs = 1 ]; then 
     #simple compare(base.xml) or dump+compare?
     log "running compare";
 	#TODO - hwinfo comparations?
@@ -487,20 +493,29 @@ elif [ $cmd_compare = 1  ]; then
 	    Init
     	PackagesRequests
 	fi
-    saxon-xslt $XML_VERSIONS_FILE /usr/share/xmlenv/compare-pkgs.xsl basefile=$base_xml fullreport=$full_html_report > $output_html
-    if [ "$?" != "0" ]; then
-	echo "problem in comparation - maybe libsaxon-java is not installed or you don't have permissions."
-        exit 1
-    else 
-		#0 = found not installed package
-		grep "not installed" -q $output_html  
-		if [ "$?" = "0" -a "$exit_codes" = "true" ]; then
-			echo "some packages are not installed check `readlink -f $output_html`"	
-			exit 1
-		else
-			echo "comparation result written to `readlink -f $output_html`"
+	if [ $cmd_compare_report = 1 ]; then
+	    saxon-xslt $XML_VERSIONS_FILE /usr/share/xmlenv/compare-pkgs.xsl basefile=$base_xml fullreport=$full_html_report > $output_html
+		if [ "$?" != "0" ]; then
+		echo "problem in comparation - maybe libsaxon-java is not installed or you don't have permissions."
+		    exit 1
+		else 
+			#0 = found not installed package
+			grep "not installed" -q $output_html  
+			if [ "$?" = "0" -a "$exit_codes" = "true" ]; then
+				echo "some packages are not installed check `readlink -f $output_html`"	
+				exit 1
+			else
+				echo "comparation result written to `readlink -f $output_html`"
+			fi
 		fi
-    fi
+	elif [ $cmd_compare_installed_pkgs = 1 ]; then
+		echo "Extra installed packages:"
+		saxon-xslt $XML_VERSIONS_FILE  /usr/share/xmlenv/pkglist-extra-installed.xsl basefile=$base_xml 
+	elif [ $cmd_compare_removed_pkgs = 1 ]; then
+		echo "Removed packages:"
+		XML_VERSIONS_FILE=`readlink -f $XML_VERSIONS_FILE`
+		saxon-xslt $base_xml /usr/share/xmlenv/pkglist-extra-installed.xsl basefile=$XML_VERSIONS_FILE 
+	fi
 elif [ $cmd_check = 1  ]; then 
 	log "running check";
 	Init #todo maybe separate manager check

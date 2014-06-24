@@ -15,12 +15,14 @@ content:
  install.sh .............. executes installation to /urs/bin /usr/share/xmlenv/ directories
 
 usage:
-./xmlenv help ......... shows help
-./xmlenv show ......... show the records
-./xmlenv dump ......... create pkgversions.xml
-./xmlenv compare ...... creates pkgversions.xml dump and compares it with base.xml
-./xmlenv check ........ checks system parameters given by commandline comma separated array
-./xmlenv backup ....... dumps  pkgversions.xml to ~/.xmlenv/pkgversions_<timestamp>.xml
+./xmlenv help .................... shows help
+./xmlenv show .................... show the records
+./xmlenv dump .................... create pkgversions.xml
+./xmlenv compare-report .......... creates pkgversions.xml dump, compares it with base.xml and writes it to report.html
+./xmlenv compare-installed-pkgs .. prints list of added packages from base state 
+./xmlenv compare-removed-pkgs .... prints list of removed packages from base state 
+./xmlenv check ................... checks system parameters given by commandline comma separated array
+./xmlenv backup .................. dumps  pkgversions.xml to ~/.xmlenv/pkgversions_<timestamp>.xml
 
 example1: generate default (short) comparation report:
 xmlenv compare -b example/base.xml -o example/result-short.html 
@@ -43,3 +45,10 @@ example4: check installed packages
 example5: remote backup dumping
 ssh user@host 'bash /dev/stdin backup' < /usr/bin/xmlenv
 scp -r user@host:.xmlenv .
+
+example6: external comparation
+./xmlenv compare -b ./first.xml -ox ./second.xml -dd -or ./my-report.html
+
+example7: state saving (to ~/.xmlenv/)
+xmlenv backup -m "installed base image"
+

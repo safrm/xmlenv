@@ -15,7 +15,7 @@ _xmlenv ()
        dump|backup) 
            COMPREPLY=( $( compgen -W "all pkglist pkgver env hw sys pkgdescr" -- $cur ) ) 
            ;;
-       compare) 
+       compare-report|compare-installed-pkgs|compare-removed-pkgs) 
            COMPREPLY=( $( compgen -W "-f -or -ox -od -b -dd -ec --full --output-report --output-xml --output-descriptions --base --dont-dump --exitcode " -- $cur ) ) 
            ;;
        -b | --base | -or | --output-report | -ox | --output-xml | -od | --output-descriptions) 
@@ -25,7 +25,7 @@ _xmlenv ()
               COMPREPLY=( $( compgen -W '-h -f -or -ox -od -b -v -dd -ec -c
               --help --full --output-report --output-xml --output-descriptions --base --verbose --dont-dump --exitcode --comment' -- "$cur" ) )
           elif [[ $COMP_CWORD == 1 ]]; then 
-              COMPREPLY=( $( compgen -W 'help show dump backup compare check' -- "$cur" ) )
+              COMPREPLY=( $( compgen -W 'help show dump backup compare-report compare-installed-pkgs compare-removed-pkgs check' -- "$cur" ) )
           fi
     esac
 

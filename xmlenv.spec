@@ -33,6 +33,8 @@ sed -i".bkp" "1,/^VERSION=/s/^VERSION=.*/VERSION=%{version}/" %{buildroot}%{_bin
 sed -i".bkp" "1,/^VERSION_DATE=/s/^VERSION_DATE=.*/VERSION_DATE=%{APP_BUILD_DATE}/" %{buildroot}%{_bindir}/xmlenv && rm -f %{buildroot}%{_bindir}/xmlenv.bkp
 install -m 644 ./compare-pkgs.xsl %{buildroot}%{_datadir}/xmlenv/
 sed -i".bkp" "1,/Version: /s/Version:   */Version:   %{version} %{APP_BUILD_DATE}/"  %{buildroot}%{_datadir}/xmlenv/compare-pkgs.xsl && rm -f %{buildroot}%{_datadir}/xmlenv/compare-pkgs.xsl.bkp
+install -m 644 ./pkglist-extra-installed.xsl %{buildroot}%{_datadir}/xmlenv/
+sed -i".bkp" "1,/Version: /s/Version:   */Version:   %{version} %{APP_BUILD_DATE}/"  %{buildroot}%{_datadir}/xmlenv/pkglist-extra-installed.xsl && rm -f %{buildroot}%{_datadir}/xmlenv/pkglist-extra-installed.xsl.bkp
 
 mkdir -p -m 0755 %{buildroot}%{_sysconfdir}/bash_completion.d
 install -m 0777 -v ./xmlenv_completion %{buildroot}%{_sysconfdir}/bash_completion.d
@@ -58,6 +60,7 @@ done
 %{_bindir}/xmlenv
 %dir %{_datadir}/xmlenv
 %{_datadir}/xmlenv/compare-pkgs.xsl
+%{_datadir}/xmlenv/pkglist-extra-installed.xsl
 
 %{_sysconfdir}/bash_completion.d/xmlenv_completion
 

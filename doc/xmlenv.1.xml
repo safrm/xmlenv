@@ -52,12 +52,14 @@
     <title>COMMANDS</title>
     <para>
         <screen format="linespecific">
-          help .......... shows help 
-          show .......... shows files in package (s)
-          dump .......... creates pkgversions.xml (d)
-          backup ........ dumps state with timestamp format
-          compare ....... creates pkgversions.xml dump and compares it with base.xml (c)
-          check ......... checks system parameters given by commandline comma separated array (ch)
+          help ................... shows help 
+          show ................... shows files in package (s)
+          dump ................... creates pkgversions.xml (d)
+          backup ................. dumps state with timestamp format
+          compare-report ......... creates pkgversions.xml dump, compares it with base.xml and creates html report (c)
+		  compare-installed-pkgs . prints list of added packages from base state 
+		  compare-removed-pkgs ... prints list of removed packages from base state 
+          check .................. checks system parameters given by commandline comma separated array (ch)
         </screen>
     </para>
   </refsect1>
@@ -195,6 +197,9 @@ scp -r user@host:.xmlenv .
 
 example6: external comparation
 ./xmlenv compare -b ./first.xml -ox ./second.xml -dd -or ./my-report.html
+
+example7: state saving (to ~/.xmlenv/)
+xmlenv backup -m "installed base image"
 ]]>
 	</screen>
   	</refsect1>

@@ -35,6 +35,9 @@ sed -i".bkp" "1,/^VERSION=/s/^VERSION=.*/VERSION=$APP_FULL_VERSION_TAG/" $BINDIR
 sed -i".bkp" "1,/^VERSION_DATE=/s/^VERSION_DATE=.*/VERSION_DATE=$APP_BUILD_DATE/" $BINDIR/xmlenv && rm -f $BINDIR/xmlenv.bkp
 install -m 0664 -v ./compare-pkgs.xsl $DATADIR/xmlenv/
 sed -i".bkp" "1,/Version: /s/Version:   */Version:   $APP_FULL_VERSION_TAG $APP_BUILD_DATE/"  $DATADIR/xmlenv/compare-pkgs.xsl && rm -f $DATADIR/xmlenv/compare-pkgs.xsl.bkp
+install -m 0664 -v ./pkglist-extra-installed.xsl $DATADIR/xmlenv/
+sed -i".bkp" "1,/Version: /s/Version:   */Version:   $APP_FULL_VERSION_TAG $APP_BUILD_DATE/"  $DATADIR/xmlenv/pkglist-extra-installed.xsl && rm -f $DATADIR/xmlenv/pkglist-extra-installed.xsl.bkp
+
 
 mkdir -p -m 0755 $COMPLETION_DIR
 install -m 0777 -v ./xmlenv_completion  $COMPLETION_DIR/
