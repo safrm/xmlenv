@@ -382,7 +382,7 @@ if [ "x$PREFFERED_MANAGER" = "xyum" ]; then
 fi
 
 #footer
-if [ $cmd_dump = 1 -o $cmd_dump = 1 ]; then
+if [ $cmd_dump = 1 -o $cmd_backup = 1 ]; then
 	echo "</system>" >> $XML_VERSIONS_FILE
 fi
 }
