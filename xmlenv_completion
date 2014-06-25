@@ -18,12 +18,12 @@ _xmlenv ()
        compare-report|compare-installed-pkgs|compare-removed-pkgs) 
            COMPREPLY=( $( compgen -W "-f -or -ox -od -b -dd -ec --full --output-report --output-xml --output-descriptions --base --dont-dump --exitcode " -- $cur ) ) 
            ;;
-       -b | --base | -or | --output-report | -ox | --output-xml | -od | --output-descriptions) 
+       -b | --base | -r | --output-report | -x | --xml |--output-xml | -od | --output-descriptions) 
             _filedir ;;
        *)
           if [[ "$cur" == -* ]]; then
-              COMPREPLY=( $( compgen -W '-h -f -or -ox -od -b -v -dd -ec -c
-              --help --full --output-report --output-xml --output-descriptions --base --verbose --dont-dump --exitcode --comment' -- "$cur" ) )
+              COMPREPLY=( $( compgen -W '-h -f -r -x -od -b -v -dd -ec -c
+              --help --full --output-report --xml --output-xml --output-descriptions --base --verbose --dont-dump --exitcode --comment' -- "$cur" ) )
           elif [[ $COMP_CWORD == 1 ]]; then 
               COMPREPLY=( $( compgen -W 'help show dump backup compare-report compare-installed-pkgs compare-removed-pkgs check' -- "$cur" ) )
           fi

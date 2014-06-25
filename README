@@ -5,8 +5,9 @@ web: http://safrm.net/projects/xmlenv
 description: multiplatformal/distribution system dumping and comparation
 
 content: 
- xmlenv  ................. main linux dump/show bash script
- compare-pkgs.xsl ........ template for XSLT comparation 
+ xmlenv  ..................... main linux dump/show bash script
+ compare-pkgs.xsl ............ template for XSLT comparation 
+ pkglist-extra-installed.xsl . template for package lists comparations 
 
  example/base.xml ............ base system dump
  example/report-short.html ... short comparation report (to "current" system dump - ./pkgversions.xml)
@@ -31,7 +32,7 @@ example2: generate full comparation report:
 xmlenv compare -v -b example/base.xml -o example/result-full.html --full
 -v .............. script verbose output
 -b <xml-file> ... dumped base xml file which we compare to
--o <html-file> .. save report to somewhere else
+-or <html-file> . save report to somewhere else
 --full .......... show in report 1.equal and 2.current unique(additional) packages
 
 example3: dump with comment
@@ -52,3 +53,5 @@ example6: external comparation
 example7: state saving (to ~/.xmlenv/)
 xmlenv backup -m "installed base image"
 
+example8: package count from files
+xmlenv show pkgcount -x pkgversions.xml

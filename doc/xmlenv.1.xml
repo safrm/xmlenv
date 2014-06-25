@@ -30,9 +30,9 @@
         <command>xmlenv COMMANDS [GROUPS] ... [OPTIONS]</command>
 		<arg choice="opt">-v --version</arg>
       	<arg choice="opt">-f --full</arg>
-		<arg choice="opt">-or --output-report &lt;html-file&gt;</arg>
+		<arg choice="opt">-r --output-report &lt;html-file&gt;</arg>
 		<arg choice="opt">-b --base &lt;xml-file&gt;</arg>
-		<arg choice="opt">-ox--output-xml &lt;xml-file&gt;</arg>
+		<arg choice="opt">-x --xml &lt;xml-file&gt;</arg>
 		<arg choice="opt">-od --output-descriptions &lt;xml-file&gt;</arg>
 		<arg choice="opt">-dd, --dont-dump</arg>
 		<arg choice="opt">-v --verbose</arg>
@@ -103,7 +103,7 @@
         </listitem>
       </varlistentry>
       
-      <varlistentry><term>-or --output-report &lt;html-file&gt;</term>
+      <varlistentry><term>-r --output-report &lt;html-file&gt;</term>
         <listitem>
           <para>
             Writes output to different file (c). (default report.html) 
@@ -119,10 +119,10 @@
         </listitem>
       </varlistentry>
 
-      <varlistentry><term>-ox --output-xml &lt;xml-file&gt;</term>
+      <varlistentry><term>-x --xml --ouput-xml &lt;xml-file&gt;</term>
         <listitem>
           <para>
-            Changes main output xmlfile name (default pkgversions.xml) (s,d,c)
+            Changes main input/output xmlfile name (default pkgversions.xml) (s,d,c)
           </para>
         </listitem>
       </varlistentry>
@@ -179,7 +179,7 @@ example2: generate full comparation report:
 xmlenv compare -v -b example/base.xml -o example/result-full.html --full
 -v .............. script verbose output
 -b <xml-file> ... dumped base xml file which we compare to
--o <html-file> .. save report to somewhere else
+-r <html-file> .. save report to somewhere else
 --full .......... show in report 1.equal and 2.current unique(additional) packages
 
 example3: dump with comment
@@ -196,10 +196,13 @@ ssh user@host 'bash /dev/stdin backup' < /usr/bin/xmlenv
 scp -r user@host:.xmlenv .
 
 example6: external comparation
-./xmlenv compare -b ./first.xml -ox ./second.xml -dd -or ./my-report.html
+./xmlenv compare -b ./first.xml -x ./second.xml -dd -or ./my-report.html
 
 example7: state saving (to ~/.xmlenv/)
 xmlenv backup -m "installed base image"
+
+example8: package count from files
+xmlenv show pkgcount -x pkgversions.xml
 ]]>
 	</screen>
   	</refsect1>
