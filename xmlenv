@@ -1,5 +1,5 @@
 #!/bin/sh
-#multiplatformal/distribution system dumping and comparation - http://safrm.net/projects/xmlenv
+#multiplatformal/distribution system environments dumping and comparation - http://safrm.net/projects/xmlenv
 #author:  Miroslav Safr <miroslav.safr@gmail.com>
 VERSION=NA                                                                   
 VERSION_DATE=NA
@@ -8,7 +8,7 @@ VERSION_DATE=NA
 alias echo="/bin/echo -e"
 BASENAME=`basename $0`
 usage() {
-    echo "$BASENAME ${VERSION} - dump and compare environments by xml"
+    echo "$BASENAME ${VERSION} - dump and compare system environments by xml"
     echo " http://safrm.net/projects/xmlenv/"
     echo "Usage:$BASENAME COMMANDS [GROUPS] ... [OPTIONS] "
     echo " COMMANDS: "

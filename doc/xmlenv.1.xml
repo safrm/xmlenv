@@ -3,7 +3,7 @@
 <refentry id="xmlenv.1">
 
 <refentryinfo>
-    <title>multiplatformal/distribution system dumping and comparation</title>
+    <title>multiplatformal/distribution system environments dumping and comparation</title>
     <author>
         <personname><firstname>Miroslav</firstname><surname>Safr</surname></personname>
         <email>miroslav.safr@gmail.com</email>
@@ -22,7 +22,7 @@
 
 <refnamediv>
     <refname>xmlenv</refname>
-    <refpurpose>multiplatformal/distribution system dumping and comparation</refpurpose>
+    <refpurpose>multiplatformal/distribution system environments dumping and comparation</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
@@ -44,7 +44,7 @@
 
   <refsect1><title>DESCRIPTION</title>
     <para>
-      Multiplatformal/distribution system dumping and comparation. There is also windows version available.
+      Multiplatformal/distribution system environments dumping and comparation. There is also windows version available.
     </para>
   </refsect1>
 

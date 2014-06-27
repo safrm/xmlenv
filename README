@@ -2,7 +2,7 @@ name: xmlenv
 author:  Miroslav Safr <miroslav.safr@gmail.com> 
 thanks to: Matusz for help with version XSLT transformation - Dezso Denes <denes.dezco@gmail.com>
 web: http://safrm.net/projects/xmlenv
-description: multiplatformal/distribution system dumping and comparation
+description: multiplatformal/distribution system  dumping and comparation
 
 content: 
  xmlenv  ..................... main linux dump/show bash script

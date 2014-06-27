@@ -9,7 +9,7 @@ Homepage: http://safrm.net/projects/xmlenv
 Package: xmlenv
 Architecture: all
 Depends: apt, xsltproc, ${misc:Depends}, ${launcher:Depends}, ${shlibs:Depends}
-Description: Multiplatformal/distribution system dumping and \
+Description: Multiplatformal/distribution system environments dumping and \
 	comparation using XML files
 
 

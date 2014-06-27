@@ -1,7 +1,7 @@
 %define APP_BUILD_DATE %(date +'%%Y%%m%%d_%%H%%M')
 
 Name:       xmlenv
-Summary:    multiplatformal/distribution system dumping and comparation
+Summary:    multiplatformal/distribution system environments dumping and comparation
 Version:    1.0.0
 Release:    1
 Group:      Development/Tools
@@ -16,7 +16,7 @@ BuildRequires:  appver >= 1.1.1
 BuildRequires: jenkins-support-scripts >= 1.2.4
 
 %description
-multiplatformal/distribution system dumping and comparation
+multiplatformal/distribution system environments dumping and comparation
 
 %prep
 %setup -c -n ./%{name}-%{version}

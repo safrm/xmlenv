@@ -8,7 +8,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
  xmlns:exslt="http://exslt.org/common" version="1.0" exclude-result-prefixes="exslt">
  <xsl:output method="html"/>
- <xsl:param name="basefile" select="'base.xml'" />
+ <xsl:param name="basefile" select="''" />
  <xsl:param name="fullreport" select="'false'" />
 
   <!-- Replace // with / everywhere if we're only interested
