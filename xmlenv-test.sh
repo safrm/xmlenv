@@ -20,8 +20,9 @@ usage() {
 TCID=10
 testlog() { echo "\033[33mTC$TCID:\033[00m\033[34m$TCNAME:\033[00m\033[36m$*\033[00m"; }
 testfail() { echo "\033[33mTC$TCID:\033[00m\033[34m$TCNAME failed:\033[00m\033[31m$*\033[00m"; exit ${TCID:-1} ;}
-teststart() { TCID=$(($TCID + 1)) ; TCNAME="$1" ; }
+teststart() { TCID=$(($TCID + 1)) ; TCNAME="$1" ; testlog "START" ; }
 testok() { testlog "OK" ;}
+TESTDIR=/usr/share/xmlenv-tests 
 
 START_TIME=`date +'%s'`
 while [ $# -gt 0 ]; do
@@ -30,13 +31,14 @@ while [ $# -gt 0 ]; do
         usage 
         exit 
         ;;
-    -ld) BINDIR="./" ;;
+    -ld) BINDIR="./" ; TESTDIR="./test" ;;
     -x) set -x ;;
     * )      
         echo "Argument $1 is not supported, exiting.."; usage ; exit 1 ;;
   esac
   shift
 done
+XMLENV=${BINDIR}xmlenv
 
 teststart "sh syntax check"
 for SCRIPT in $(  grep -r -l -h --exclude-dir=test --exclude-dir=.git --exclude-dir=doc "#\!/bin/sh" . )
@@ -60,6 +62,29 @@ do
 	fi
 done 
 testok
+
+
+teststart "compare-installed-pkgs add one in the end"
+sh $XMLENV compare-installed-pkgs -b $TESTDIR/compare-installed-pkgs/test1-base.xml -x $TESTDIR/compare-installed-pkgs/test1-added-one.xml -dd
+if  [ $? -ne 0 ]; then
+	testfail 
+fi
+testok
+
+teststart "compare-installed-pkgs add one in middle"
+sh $XMLENV compare-installed-pkgs -b $TESTDIR/compare-installed-pkgs/test1-added-one.xml -x $TESTDIR/compare-installed-pkgs/test1-added-two.xml -dd
+if  [ $? -ne 0 ]; then
+	testfail 
+fi
+testok
+
+teststart "compare-installed-pkgs add two"
+sh $XMLENV compare-installed-pkgs -b $TESTDIR/compare-installed-pkgs/test1-base.xml -x $TESTDIR/compare-installed-pkgs/test1-added-two.xml -dd
+if  [ $? -ne 0 ]; then
+	testfail 
+fi
+testok
+
 
 echo "tests finished OK"
 ELAPSED_TIME=$((`date +'%s'` - $START_TIME))
