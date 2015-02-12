@@ -48,6 +48,7 @@ usage() {
 #    echo "               sys:release>=\"fedora 9\"  system specifications equal or higher query (c)"
     echo " "
 }
+commadExists() { type $1 >/dev/null 2>&1 ; }
 
 XMLENV_BACKUP_DIR=~/.xmlenv
 XML_VERSIONS_FILE=./pkgversions.xml
@@ -61,7 +62,7 @@ COMMENT_FIELD=""
 
 Init() {
 #header - os type --------------------------------------------------------
-if ! type -P uname > /dev/null 2>&1; then 
+if commadExists uname ; then 
         OSTYPE=`uname`
         log "type=$OSTYPE";
 fi
@@ -73,7 +74,7 @@ else
 fi
 
 #header - system name --------------------------------------------------- 
-if ! type -P lsb_release > /dev/null 2>&1; then 
+if commadExists lsb_release ; then  
 	SYSTEMNAME=`lsb_release -d | sed 's/^Description:[[:space:]]//g'`
     log "systemname=$SYSTEMNAME";
 fi
@@ -85,7 +86,7 @@ else
 fi
 
 #header - os info + arch separately --------------------------------------
-if ! type -P uname > /dev/null 2>&1; then 
+if commadExists uname ; then 
 	OSINFO=`uname -a `
 	OSARCH=`uname -m`
     log "arch=$OSARCH";
@@ -99,7 +100,7 @@ else
 fi
 
 #header - computername ----------------------------------------------------
-if ! type -P hostname > /dev/null 2>&1; then 
+if commadExists hostname ; then 
 	HOSTNAME=`hostname -f`
     log "hostname=$HOSTNAME";
 fi
@@ -111,7 +112,7 @@ else
 fi
 
 #header - username ----------------------------------------------------
-if ! type -P whoami > /dev/null 2>&1; then 
+if commadExists whoami ; then 
 	USERNAME=`whoami`
     log "username=$USERNAME";
 fi

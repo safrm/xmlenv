@@ -196,7 +196,7 @@ ssh user@host 'bash /dev/stdin backup' < /usr/bin/xmlenv
 scp -r user@host:.xmlenv .
 
 example6: external comparation
-./xmlenv compare -b ./first.xml -x ./second.xml -dd -or ./my-report.html
+./xmlenv compare-installed-pkgs -b ./first.xml -x ./second.xml -dd -r ./my-report.html
 
 example7: state saving (to ~/.xmlenv/)
 xmlenv backup -m "installed base image"
