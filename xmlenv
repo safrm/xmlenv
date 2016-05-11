@@ -1,7 +1,7 @@
 #!/bin/sh
 #multiplatformal/distribution system environments dumping and comparation - http://safrm.net/projects/xmlenv
 #author:  Miroslav Safr <miroslav.safr@gmail.com>
-VERSION=NA                                                                   
+VERSION=NA
 VERSION_DATE=NA
 
 #support color escape characters on different terminals
@@ -57,67 +57,62 @@ XML_HEADER_START="<?xml version=\"1.0\" encoding=\"utf-8\"?>"
 XML_HEADER="<system "
 PREFFERED_MANAGER=""           #dpkg
 MANAGERS="managers: "          #status
-TS=$(date +"%Y%m%d_%H%M")
+TS=$( date +"%Y%m%d_%H%M" )
 COMMENT_FIELD=""
 
 Init() {
 #header - os type --------------------------------------------------------
-if commadExists uname ; then 
+if commadExists uname ; then
         OSTYPE=`uname`
-        log "type=$OSTYPE";
+        log "type=$OSTYPE"
 fi
-if [ "x$OSTYPE" = "x" ]
-then
+if [ "x$OSTYPE" = "x" ]; then
     echo "No system name and type detected (uname)"
 else
-	XML_HEADER="$XML_HEADER type=\"$OSTYPE\" "
+ XML_HEADER="$XML_HEADER type=\"$OSTYPE\" "
 fi
 
-#header - system name --------------------------------------------------- 
-if commadExists lsb_release ; then  
-	SYSTEMNAME=`lsb_release -d | sed 's/^Description:[[:space:]]//g'`
+#header - system name ---------------------------------------------------
+if commadExists lsb_release ; then
+    SYSTEMNAME=`lsb_release -d | sed 's/^Description:[[:space:]]//g'`
     log "systemname=$SYSTEMNAME";
 fi
-if [ "x$SYSTEMNAME" = "x" ]
-then
+if [ "x$SYSTEMNAME" = "x" ]; then
     echo "No system name detected (lsb_release)"
 else
 	XML_HEADER="$XML_HEADER systemname=\"$SYSTEMNAME\" "
 fi
 
 #header - os info + arch separately --------------------------------------
-if commadExists uname ; then 
+if commadExists uname ; then
 	OSINFO=`uname -a `
 	OSARCH=`uname -m`
-    log "arch=$OSARCH";
-    log "info=$OSINFO";
+    log "arch=$OSARCH"
+    log "info=$OSINFO"
 fi
-if [ "x$OSINFO" = "x" ]
-then
+if [ "x$OSINFO" = "x" ]; then
     echo "No system name and type detected (uname)"
 else
 	XML_HEADER="$XML_HEADER arch=\"$OSARCH\" info=\"$OSINFO\" "
 fi
 
 #header - computername ----------------------------------------------------
-if commadExists hostname ; then 
+if commadExists hostname ; then
 	HOSTNAME=`hostname -f`
-    log "hostname=$HOSTNAME";
+    log "hostname=$HOSTNAME"
 fi
-if [ "x$HOSTNAME" = "x" ]
-then
+if [ "x$HOSTNAME" = "x" ]; then
     echo "No system name detected (hostname)"
 else
 	XML_HEADER="$XML_HEADER hostname=\"$HOSTNAME\""
 fi
 
 #header - username ----------------------------------------------------
-if commadExists whoami ; then 
+if commadExists whoami ; then
 	USERNAME=`whoami`
-    log "username=$USERNAME";
+    log "username=$USERNAME"
 fi
-if [ "x$USERNAME" = "x" ]
-then
+if [ "x$USERNAME" = "x" ]; then
     echo "No username detected (whoami)"
 else
 	XML_HEADER="$XML_HEADER username=\"$USERNAME\""
@@ -141,10 +136,10 @@ fi
 YUMEXEC=`which yum 2>/dev/null`
 if [ "x$YUMEXEC" != "x"  ]; then
         MANAGERS="$MANAGERSyum:OK "
-		if echo $SYSTEMNAME | grep -q -i -e "\(ubuntu\|debian\).*" ; then 
-			log "Don't use yum on deb based distros" 
-		else 
-			PREFFERED_MANAGER="yum" 
+		if echo $SYSTEMNAME | grep -q -i -e "\(ubuntu\|debian\).*" ; then
+			log "Don't use yum on deb based distros"
+		else
+			PREFFERED_MANAGER="yum"
 		fi
 else
         MANAGERS="$MANAGERS yum:failed "
@@ -237,15 +232,15 @@ if [ "x$PREFFERED_MANAGER" = "xaptitude" ]; then
 		fi
 
 		if [ "$group_pkgver" = "1" ]; then
-			echo "<packages>" >> $XML_VERSIONS_FILE	
+			echo "<packages>" >> $XML_VERSIONS_FILE
 			aptitude -F '%p %v %p' search '~i' --disable-columns | tr \" \' | tr -d \&\<\> | awk '{print "  <package name=\""$1"\" version=\""$2"\" fullpackagename=\""$3"\"/>" }' >>  $XML_VERSIONS_FILE	
-			echo "</packages>" >> $XML_VERSIONS_FILE	
+			echo "</packages>" >> $XML_VERSIONS_FILE
 		elif [ "$group_pkglist" = "1" ]; then #simple list
-			echo "<packages>" >> $XML_VERSIONS_FILE	
+			echo "<packages>" >> $XML_VERSIONS_FILE
 			aptitude -F '%p' search '~i' --disable-columns | tr \" \' | tr -d \&\<\> | awk '{print "  <package name=\""$1"\"/>" }' >>  $XML_VERSIONS_FILE	
-			echo "</packages>" >> $XML_VERSIONS_FILE	
+			echo "</packages>" >> $XML_VERSIONS_FILE
 		fi
-	fi	
+	fi
 
 	if [ "$cmd_show" = "1" ]; then
 		if [ "$group_pkgver" = "1" ]; then
@@ -261,25 +256,25 @@ if [ "x$PREFFERED_MANAGER" = "xaptitude" ]; then
 
 	if [ "$cmd_check" = "1" ]; then
 		if [ "$group_pkgver" = "1" ]; then
-			echo "todo: check versions" 
+			echo "todo: check versions"
 		elif [ "$group_pkglist" = "1" ]; then #simple list
 			INSTALLED=`aptitude -F '%p' search '~i' --disable-columns | tr \" \' | tr -d \&\<\> | awk '{print $1}'`
 			for PKGNAME in $DATA_LIST
-			do 
-                            FOUND=0
+			do
+                FOUND=0
 			    for CHECK in $INSTALLED
-			    do 
-                              if [ "x$CHECK" = "x$PKGNAME" ]; then
-	                         FOUND=1
-				 echo "$PKGNAME installed - OK"
-                              fi
+			    do
+                     if [ "x$CHECK" = "x$PKGNAME" ]; then
+	                     FOUND=1
+				         echo "$PKGNAME installed - OK"
+                     fi
 			    done
-                            if [ $FOUND -eq 0 ]; then
-                               echo "$PKGNAME not installed - exit 1" 
-                               exit 1
-                            fi
-			done
+                if [ $FOUND -eq 0 ]; then
+                     echo "$PKGNAME not installed - exit 1"
+                     exit 1
                 fi
+			done
+        fi
 	fi
 fi
 if [ "x$PREFFERED_MANAGER" = "xdpkg" ]; then
@@ -291,13 +286,13 @@ if [ "x$PREFFERED_MANAGER" = "xdpkg" ]; then
 			echo "</system>" >> $XML_DESCRIPTIONS_FILE
 		fi
 		if [ "$group_pkgver" = "1" ]; then
-			echo "<packages>" >> $XML_VERSIONS_FILE	
+			echo "<packages>" >> $XML_VERSIONS_FILE
 			dpkg -l | awk '/^ii/ {print "\t<package name=\"" $2 "\" version=\""$3 "\" />"}' >>  $XML_VERSIONS_FILE
-			echo "</packages>" >> $XML_VERSIONS_FILE	
+			echo "</packages>" >> $XML_VERSIONS_FILE
 		elif [ "$group_pkglist" = "1" ]; then #simple list
-			echo "<packages>" >> $XML_VERSIONS_FILE	
-			dpkg -l | awk '/^ii/ {print "\t<package name=\"" $2 "\" />"}' >>  $XML_VERSIONS_FILE	
-			echo "</packages>" >> $XML_VERSIONS_FILE	
+			echo "<packages>" >> $XML_VERSIONS_FILE
+			dpkg -l | awk '/^ii/ {print "\t<package name=\"" $2 "\" />"}' >>  $XML_VERSIONS_FILE
+			echo "</packages>" >> $XML_VERSIONS_FILE
 		fi
  	fi
 	if [ "$cmd_show" = "1" ]; then
@@ -305,7 +300,7 @@ if [ "x$PREFFERED_MANAGER" = "xdpkg" ]; then
 			dpkg -l | awk '/^ii/ {print $2, $3}'
 		elif [ "$group_pkglist" = "1" ]; then #simple list
 			dpkg -l | awk '/^ii/ {print $2}'
-                fi
+        fi
 		if [ "$group_pkgcount" = "1" ]; then
 			COUNT=`dpkg -l | awk '/^ii/ {print $2}'| wc -l`
  			echo "installed $COUNT packages"
@@ -317,43 +312,42 @@ if [ "x$PREFFERED_MANAGER" = "xdpkg" ]; then
 		elif [ "$group_pkglist" = "1" ]; then #simple list
 			INSTALLED=`dpkg -l | awk '/^ii/ {print $2}'`
 			for PKGNAME in $DATA_LIST
-			do 
-                            FOUND=0
+			do
+                FOUND=0
 			    for CHECK in $INSTALLED
-			    do 
-                              if [ "x$CHECK" = "x$PKGNAME" ]; then
-	                            FOUND=1
-				    echo "$PKGNAME installed - OK"
-                              fi
+			    do
+                    if [ "x$CHECK" = "x$PKGNAME" ]; then
+	                    FOUND=1
+				        echo "$PKGNAME installed - OK"
+                    fi
 			    done
-                            if [ $FOUND -eq 0 ]; then
-                               echo "$PKGNAME not installed - exit 1" 
-                               exit 1
-                            fi
-			done
+                if [ $FOUND -eq 0 ]; then
+                    echo "$PKGNAME not installed - exit 1" 
+                    exit 1
                 fi
+			done
+        fi
 	fi
 fi
 
-#rpm -qa	
+#rpm -qa
 #rpm -qa | while read package; do rpm -qi $package | head -n 1 | while read a b c; do echo -n "$c "; done; rpm -qi $package | head -n 2 | tail -n 1 | while read a b c; do echo $c; done; done
-#yum 
+#yum
 if [ "x$PREFFERED_MANAGER" = "xyum" ]; then
 	#packages
 	if [ $cmd_dump = 1 -o  $cmd_backup = 1 ]; then
-		echo "<packages>" >> $XML_VERSIONS_FILE	
+		echo "<packages>" >> $XML_VERSIONS_FILE
 		yum list installed | tr \" \' | tr -d \&\<\> | awk '{print "  <package name=\"" $1 "\" version=\""$2 "\" />" }' >>  $XML_VERSIONS_FILE	
-        	echo "</packages>" >> $XML_VERSIONS_FILE	
+       	echo "</packages>" >> $XML_VERSIONS_FILE
 	fi
-
 
 	if [ "$cmd_show" = "1" ]; then
 		if [ "$group_pkgver" = "1" ]; then
 			 yum list installed | tr \" \' | tr -d \&\<\> | awk '{print "$1 " "$2" }'
 		elif [ "$group_pkglist" = "1" ]; then #simple list
 			 yum list installed | tr \" \' | tr -d \&\<\> | awk '{print "$1"}'
-                fi
         fi
+    fi
 
 	if [ "$group_pkgcount" = "1" ]; then
 		COUNT=`yum list installed| wc -l`
@@ -362,25 +356,25 @@ if [ "x$PREFFERED_MANAGER" = "xyum" ]; then
 
 	if [ "$cmd_check" = "1" ]; then
 		if [ "$group_pkgver" = "1" ]; then
-			echo "todo: check versions" 
+			echo "todo: check versions"
 		elif [ "$group_pkglist" = "1" ]; then #simple list
 			INSTALLED=`aptitude -F '%p' search '~i' --disable-columns | tr \" \' | tr -d \&\<\> | awk '{print $1}'`
 			for PKGNAME in $DATA_LIST
-			do 
-                            FOUND=0
+			do
+                FOUND=0
 			    for CHECK in $INSTALLED
-			    do 
-                              if [ "x$CHECK" = "x$PKGNAME" ]; then
-	                        FOUND=1
-				echo "$PKGNAME installed - OK" 
-                              fi
+			    do
+                    if [ "x$CHECK" = "x$PKGNAME" ]; then
+	                    FOUND=1
+				        echo "$PKGNAME installed - OK" 
+                    fi
 			    done
-                            if [ $FOUND -eq 0 ]; then
-                               echo "$PKGNAME not installed - exit 1" 
-                               exit 1
-                            fi
-			done
+                if [ $FOUND -eq 0 ]; then
+                    echo "$PKGNAME not installed - exit 1" 
+                    exit 1
                 fi
+			done
+        fi
 	fi
 fi
 
@@ -401,7 +395,7 @@ cmd_show=0
 cmd_dump=0
 cmd_backup=0
 cmd_compare_report=0
-cmd_compare_installed_pkgs=0 
+cmd_compare_installed_pkgs=0
 cmd_compare_removed_pkgs=0
 cmd_check=0
 group_pkglist=0
@@ -412,7 +406,7 @@ group_descr=0
 group_envvar=0
 group_pkgcount=0
 DATA_LIST=
-log(){ [ ${VERBOSE_FLAG:-0} -eq 0 ] || echo "V: $*"; }
+log(){ [ ${VERBOSE_FLAG:-0} -eq 0 ] || echo "V: $*" ; }
 fail() { printf "\n\033[01;31mERROR: $*\033[00m\n" ; exit 1 ; }
 
 while [ "$1" != "" ]; do
@@ -433,28 +427,28 @@ while [ "$1" != "" ]; do
         versions|pkgver)        group_pkgver=1 ;;
         sysinfo|system|sys)     group_sysinfo=1 ;;
         hwinfo|hw)              group_hwinfo=1 ;;
-        descr|pkgdescr|descriptions)  group_descr=1 ;;   #scpecial usage
+        descr|pkgdescr|descriptions)  group_descr=1 ;;   #special usage
         env|envvar)             group_envvar=1 ;;
         count|pkgcount)         group_pkgcount=1 ;;
-        -b|--base-xml)          shift  
+        -b|--base-xml)          shift
                                 base_xml=`readlink -f $1`
 								[ -f $base_xml ] || fail "Base file $base_xml does not exists"
                                 ;;
-        -r|--output-report)     shift  
+        -r|--output-report)     shift
                                 output_html=$1 ;;
-        -x|--xml|--output-xml)  shift  
+        -x|--xml|--output-xml)  shift
                                 XML_VERSIONS_FILE=$1 ; XMLFILE_FROM_ARG=1 ;;
-        -od|--output-descriptions)      shift  
+        -od|--output-descriptions)      shift
                                 XML_DESCRIPTIONS_FILE=$1 ;;
         -f|--full)              full_html_report=true;;
 		-dd|--dont-dump)        dont_dump=1 ;;
         -ec|--exitcode)         exit_codes=true;;
-        -c|--comment)           shift  
-                                COMMENT_FIELD="$1";;
+        -c|--comment)           shift
+                                COMMENT_FIELD="$1" ;;
         help|-h|--help )        usage exit ;;
         -v|--verbose )          VERBOSE_FLAG=1 ;;
-        -V|--version)           echo "`basename $0` $VERSION ${VERSION_DATE}" exit 0 ;;  
-        *)                      DATA_LIST=`echo $1 | tr "," "\n"`;;
+        -V|--version)           echo "`basename $0` $VERSION ${VERSION_DATE}" ; exit 0 ;;
+        *)                      DATA_LIST=`echo $1 | tr "," "\n"` ;;
 
     esac
     shift
@@ -472,14 +466,14 @@ fi
 log "show=$cmd_show dump=$cmd_dump backup=$cmd_backup compare_report=$cmd_compare_report check=$cmd_check"
 log "pkglist=$group_pkglist pkgver=$group_pkgver envvar=$group_envvar pkgcount=$group_pkgcount desc=$group_descr"
 if [ $cmd_show = 1 -o $cmd_dump = 1 -o $cmd_backup = 1 ]; then
-	log "running show, dump or backup";
+	log "running show, dump or backup"
 
 	#special case to count packages from file
 	if [ "$group_pkgcount" = "1" -a -n "$XMLFILE_FROM_ARG" ]; then
 		[ -f $XML_VERSIONS_FILE ] || fail "Input xml file $XML_VERSIONS_FILE does not exist"
 		COUNT=`grep "\<package " $XML_VERSIONS_FILE | wc -l`
 		echo "installed $COUNT packages"
-		exit 0 ;
+		exit 0
 	fi
 
 	if [ $cmd_backup = 1 ]; then
@@ -492,9 +486,9 @@ if [ $cmd_show = 1 -o $cmd_dump = 1 -o $cmd_backup = 1 ]; then
 	if [ $group_pkglist = 1 -o $group_pkgver = 1 -o $group_hwinfo = 1 -o $group_envvar = 1 -o $group_pkgcount = 1 -o $group_descr = 1 ]; then
 		PackagesRequests
 	fi
-elif [ $cmd_compare_report = 1 -o $cmd_compare_installed_pkgs = 1 -o $cmd_compare_removed_pkgs = 1 ]; then 
-    #simple compare(base.xml) or dump+compare?
-    log "running compare";
+elif [ $cmd_compare_report = 1 -o $cmd_compare_installed_pkgs = 1 -o $cmd_compare_removed_pkgs = 1 ]; then
+    #simple compare(base.xml) or dump+compare
+    log "running compare"
 	#TODO - hwinfo comparations?
     cmd_dump=1 ; group_pkgver=1 ; group_sysinfo=1 ;
 	if [ $dont_dump = 1 ]; then
@@ -509,11 +503,11 @@ elif [ $cmd_compare_report = 1 -o $cmd_compare_installed_pkgs = 1 -o $cmd_compar
 		if [ "$?" != "0" ]; then
 		echo "problem in comparation - maybe libsaxon-java is not installed or you don't have permissions."
 		    exit 1
-		else 
+		else
 			#0 = found not installed package
-			grep "not installed" -q $output_html  
+			grep "not installed" -q $output_html
 			if [ "$?" = "0" -a "$exit_codes" = "true" ]; then
-				echo "some packages are not installed check `readlink -f $output_html`"	
+				echo "some packages are not installed check `readlink -f $output_html`"
 				exit 1
 			else
 				echo "comparation result written to `readlink -f $output_html`"
@@ -530,14 +524,14 @@ elif [ $cmd_compare_report = 1 -o $cmd_compare_installed_pkgs = 1 -o $cmd_compar
 		XML_VERSIONS_FILE=`readlink -f $XML_VERSIONS_FILE`
 		saxon-xslt $base_xml /usr/share/xmlenv/pkglist-extra-installed.xsl basefile=$XML_VERSIONS_FILE 
 	fi
-elif [ $cmd_check = 1  ]; then 
-	log "running check";
+elif [ $cmd_check = 1  ]; then
+	log "running check"
 	Init #todo maybe separate manager check
 	if [ $group_pkglist = 1 -o $group_pkgver = 1 -o $group_envvar = 1 ]; then
 		PackagesRequests
 	fi
 else
-   	echo "wrong parameters";
+   	echo "wrong parameters"
     usage
 fi
 
