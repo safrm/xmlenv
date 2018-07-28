@@ -5,7 +5,7 @@ VERSION=NA
 VERSION_DATE=NA
 
 #support color escape characters on different terminals
-alias echo="/bin/echo -e"
+[ -e /bin/echo ] && alias echo="/bin/echo -e"
 BASENAME=`basename $0`
 usage() {
     echo "$BASENAME ${VERSION} - dump and compare system environments by xml"
