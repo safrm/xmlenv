@@ -159,7 +159,7 @@ if [ $cmd_show = 1 -a $group_sysinfo = 1 ]; then
         echo "hostname=$HOSTNAME"
         echo "username=$USERNAME"
         echo "MANAGERS=$MANAGERS"
-        echo "commnet=$COMMENT_FIELD"
+        echo "comment=$COMMENT_FIELD"
 fi
 }
 
